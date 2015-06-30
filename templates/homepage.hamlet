@@ -39,3 +39,10 @@
   <li> And last but not least, Testing. In <em>tests/main.hs</em> you will find a #
     test suite that performs tests on this page. #
     You can run your tests by doing: <pre>yesod test</pre>
+
+  <li> Do we have data?
+    <p>
+      $maybe yes <- db
+        yes, we do!
+      $nothing
+        no, unfortunately, we don't :/
