@@ -1,1 +1,21 @@
-document.getElementById(#{toJSON aDomId}).innerHTML = "This text was added by the Javascript part of the homepage widget.";
+var barData = {
+  labels : ["January","February","March","April","May","June"],
+  datasets : [
+    {
+      fillColor : "#48A497",
+      strokeColor : "#48A4D1",
+      data : [456,479,324,569,702,600]
+    },
+    {
+      fillColor : "rgba(73,188,170,0.4)",
+      strokeColor : "rgba(72,174,209,0.4)",
+      data : [364,504,605,400,345,320]
+    }
+  ]
+};
+
+// Get context with jQuery - using jQuery's .get() method.
+var ctx = document.getElementById("myChart").getContext("2d");
+
+// This will get the first returned node in the jQuery collection.
+new Chart(ctx).Bar(barData);

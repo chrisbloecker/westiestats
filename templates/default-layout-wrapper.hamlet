@@ -22,6 +22,9 @@ $newline never
 
     <script>
       document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
+  <header>
+    ^{pageBody header}
+
   <body>
     <div class="container">
       <header>

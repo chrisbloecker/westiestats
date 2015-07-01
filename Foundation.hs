@@ -65,6 +65,11 @@ instance Yesod App where
         -- value passed to hamletToRepHtml cannot be a widget, this allows
         -- you to use normal widget features in default-layout.
 
+        header <- widgetToPageContent $ do
+            addScript $ StaticR js_jquery_2_1_4_min_js
+            addScript $ StaticR js_bootstrap_min_js
+            addScript $ StaticR js_Chart_min_js
+
         pc <- widgetToPageContent $ do
             addStylesheet $ StaticR css_bootstrap_css
             $(widgetFile "default-layout")
