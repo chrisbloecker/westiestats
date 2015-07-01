@@ -43,6 +43,6 @@
   <li> Do we have data?
     <p>
       $maybe yes <- db
-        yes, we do!
+        yes, we do: #{length (persons yes)} entries!
       $nothing
         no, unfortunately, we don't :/

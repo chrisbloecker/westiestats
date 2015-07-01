@@ -17,28 +17,56 @@ def mkParser():
 
 URL = "http://swingdancecouncil.herokuapp.com/pages/dancer_point_history.json?wscid="
 
+
+def writeStart(fh):
+  fh.write("{\"persons\":[")
+
+
+def writeEnd(fh):
+  fh.write("]}")
+
+
+def fetchEntry(id):
+  try:
+    return post(URL + str(id)).text
+  except:
+    print("[ERR ] Problem fetching data for " + str(id) + ". Retrying...")
+    return fetchEntry(id)
+
+
+def hasData(data):
+  return len(findall("full_name", data)) > 0
+
+
+def writeFirst(fh, data):
+  fh.write(data)
+
+
+def writeEntry(fh, data):
+  fh.write(",\n")
+  writeFirst(fh, data)
+
+
 def fetchData(outfile : str, fromid : int, toid: int):
   fh = open(outfile, "w")
-  fh.write("[")
+  writeStart(fh)
 
   print("[INFO] Fetching data for " + str(fromid))
-  data = post(URL + str(fromid)).text
-  if len(findall("full_name", data)) > 0:
-    fh.write(data)
+  data = fetchEntry(fromid)
+  if hasData(data):
+    writeFirst(fh, data)
   else:
     print("[INFO] No data for " + str(wscid))
 
   for wscid in range(fromid+1, toid+1):
     print("[INFO] Fetching data for " + str(wscid))
-    data = post(URL + str(wscid)).text
-    if len(findall("full_name", data)) > 0:
-      fh.write(",")
-      fh.write(data)
+    data = fetchEntry(wscid)
+    if hasData(data):
+      writeEntry(fh, data)
     else:
       print("[INFO] No data for " + str(wscid))
 
-  fh.write("]")
-
+  writeEnd(fh)
   fh.flush()
   fh.close()
 
