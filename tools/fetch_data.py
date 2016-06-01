@@ -15,7 +15,7 @@ def mkParser():
 
 # -----------------------------------------------------------------------------
 
-URL = "http://swingdancecouncil.herokuapp.com/pages/dancer_point_history.json?wscid="
+URL = "http://wsdc-points.us-west-2.elasticbeanstalk.com/lookup/find?num="
 
 
 def writeStart(fh):
