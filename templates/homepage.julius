@@ -1,21 +1,33 @@
-var barData = {
-  labels : ["January","February","March","April","May","June"],
-  datasets : [
-    {
-      fillColor : "#48A497",
-      strokeColor : "#48A4D1",
-      data : [456,479,324,569,702,600]
-    },
-    {
-      fillColor : "rgba(73,188,170,0.4)",
-      strokeColor : "rgba(72,174,209,0.4)",
-      data : [364,504,605,400,345,320]
+document.getElementById(#{toJSON aDomId}).innerHTML = "This text was added by the Javascript part of the homepage widget.";
+
+$(function() {
+  $("##{rawJS commentFormId}").submit(function(event) {
+    event.preventDefault();
+
+    var message = $("##{rawJS commentTextareaId}").val();
+    // (Browsers that enforce the "required" attribute on the textarea won't see this alert)
+    if (!message) {
+      alert("Please fill out the comment form first.");
+      return;
     }
-  ]
-};
 
-// Get context with jQuery - using jQuery's .get() method.
-var ctx = document.getElementById("myChart").getContext("2d");
+    // Make an AJAX request to the server to create a new comment
+    $.ajax({
+      url: '@{CommentR}',
+      type: 'POST',
+      contentType: "application/json",
+      data: JSON.stringify({
+        message: message,
+      }),
+      success: function (data) {
+        var newNode = $("<li></li>");
+        newNode.text(data.message);
+        $("##{rawJS commentListId}").append(newNode);
+      },
+      error: function (data) {
+        console.log("Error creating comment: " + data);
+      },
+    });
 
-// This will get the first returned node in the jQuery collection.
-new Chart(ctx).Bar(barData);
+  });
+});

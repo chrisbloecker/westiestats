@@ -1,10 +1,9 @@
 module Handler.Home where
 
--------------------------------------------------------------------------------
 import Import
-import Model
-import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3, withSmallInput)
--------------------------------------------------------------------------------
+import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,
+                              withSmallInput)
+import Text.Julius (RawJS (..))
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
@@ -18,10 +17,8 @@ getHomeR = do
     (formWidget, formEnctype) <- generateFormPost sampleForm
     let submission = Nothing :: Maybe (FileInfo, Text)
         handlerName = "getHomeR" :: Text
-
-    db <- appData <$> getYesod
-
     defaultLayout $ do
+        let (commentFormId, commentTextareaId, commentListId) = commentIds
         aDomId <- newIdent
         setTitle "Welcome To Yesod!"
         $(widgetFile "homepage")
@@ -34,9 +31,8 @@ postHomeR = do
             FormSuccess res -> Just res
             _ -> Nothing
 
-    db <- appData <$> getYesod
-
     defaultLayout $ do
+        let (commentFormId, commentTextareaId, commentListId) = commentIds
         aDomId <- newIdent
         setTitle "Welcome To Yesod!"
         $(widgetFile "homepage")
@@ -45,3 +41,6 @@ sampleForm :: Form (FileInfo, Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Choose a file"
     <*> areq textField (withSmallInput "What's on the file?") Nothing
+
+commentIds :: (Text, Text, Text)
+commentIds = ("js-commentForm", "js-createCommentTextarea", "js-commentList")

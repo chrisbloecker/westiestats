@@ -56,7 +56,7 @@ def fetchData(outfile : str, fromid : int, toid: int):
   if hasData(data):
     writeFirst(fh, data)
   else:
-    print("[INFO] No data for " + str(wscid))
+    print("[INFO] No data for " + str(fromid))
 
   for wscid in range(fromid+1, toid+1):
     print("[INFO] Fetching data for " + str(wscid))

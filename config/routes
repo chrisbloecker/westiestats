@@ -4,3 +4,6 @@
 /robots.txt RobotsR GET
 
 / HomeR GET POST
+
+/comments CommentR POST
+/search SearchR GET POST
