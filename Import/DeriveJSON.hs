@@ -23,6 +23,7 @@ fieldLabel "dancerLastName"       = "last_name"
 fieldLabel "dancerWscid"          = "wscid"
 -- placements
 fieldLabel "westCoastSwing"       = "West Coast Swing"
+fieldLabel "lindy"                = "Lindy"
 -- division
 fieldLabel "divisionDetails"      = "division"
 fieldLabel "divisionTotalPoints"  = "total_points"
@@ -48,8 +49,8 @@ fieldLabel s = s
 jsonOptions :: Options
 jsonOptions = Options { fieldLabelModifier      = fieldLabel
                       , constructorTagModifier  = id
-                      , allNullaryToStringTag   = True
-                      , omitNothingFields       = False
+                      , allNullaryToStringTag   = False
+                      , omitNothingFields       = True
                       , sumEncoding             = ObjectWithSingleField
                       , unwrapUnaryRecords      = False
                       }

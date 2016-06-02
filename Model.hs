@@ -12,7 +12,7 @@ newtype Database = Database { persons :: [Person] }
 
 data Person = Person { personType       :: Text
                      , personDancer     :: Dancer
-                     , personPlacements :: Placements
+                     , personPlacements :: Maybe Placements
                      }
   deriving (Show)
 
@@ -23,7 +23,8 @@ data Dancer = Dancer { dancerId        :: Integer
                      }
   deriving (Show)
 
-data Placements = Placements { westCoastSwing :: [Division]
+data Placements = Placements { westCoastSwing :: Maybe [Division]
+                             , lindy          :: Maybe [Division]
                              }
   deriving (Show)
 
@@ -49,7 +50,7 @@ data Competition = Competition { competitionRole   :: Text
 data Event = Event { eventId       :: Integer
                    , eventName     :: Text
                    , eventLocation :: Text
-                   , eventUrl      :: Text
+                   , eventUrl      :: Maybe Text
                    , eventDate     :: Text
                    }
   deriving (Show)

@@ -6,6 +6,7 @@ import Data.Aeson            (eitherDecode')
 import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3,
                               withSmallInput)
 import Network.HTTP          (simpleHTTP, postRequest, getResponseBody)
+import Data.Text as T        (pack, replace)
 
 getSearchR :: Handler Html
 getSearchR = do
@@ -20,7 +21,6 @@ postSearchR = do
     case searchResult of
         FormSuccess wscid -> do
             result <- getPerson wscid
-            $(logInfo) (pack . show $ result)
             defaultLayout $ do
                 $(widgetFile "search")
         _ -> redirect SearchR
@@ -36,5 +36,5 @@ getPerson :: Int -> Handler (Either String Person)
 getPerson n = do
   response <- liftIO $ simpleHTTP (postRequest $ url n)
   body     <- liftIO $ getResponseBody response
-  let mperson = eitherDecode' . encodeUtf8 . fromStrict . pack $ body :: Either String Person
+  let mperson = eitherDecode' . encodeUtf8 . fromStrict . (T.replace ",\"placements\":[]" "" :: Text -> Text) . T.pack $ body :: Either String Person
   return mperson

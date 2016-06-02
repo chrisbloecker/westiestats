@@ -6,7 +6,8 @@
     <form method=post action=@{SearchR} enctype=#{searchEnctype}>
       ^{searchWidget}
       <button .btn .btn-primary type="submit">
-         Search<span class="glyphicon glyphicon-search"></span>
+         Search
+         <span class="glyphicon glyphicon-search"></span>
 
 <section.page-header>
   <div>
@@ -15,19 +16,49 @@
         #{err}
       $of Right person
         $with Dancer _ firstname lastname wscid <- personDancer person
-          <h3>#{wscid} - #{firstname} #{lastname}
-        $with Placements wcs <- personPlacements person
-          <h4>West Coast Swing
-            $forall Division (Details _ divisionName _) totalPoints competitions <- wcs
-              <h5>#{divisionName}
-              <table .table .table-striped .table-hover>
-              <tbody>
-              $forall Competition role points event result <- competitions
-                $with Event _ name location _ date <- event
-                  <tr>
-                    <td>#{name}
-                    <td>#{location}
-                    <td>#{date}
-                    <td>#{role}
-                    <td>#{result}
-                    <td>#{points}
+          <h2>#{wscid} - #{firstname} #{lastname}
+        $maybe Placements wcs lindy <- personPlacements person
+          $maybe wcsresults <- wcs
+            <h3>West Coast Swing
+              $forall Division (Details _ divisionName _) totalPoints competitions <- wcsresults
+                <h4>#{divisionName} - #{totalPoints} Points
+                <table .table .table-striped .table-hover>
+                  <thead>
+                    <th .col-md-2 .col-lg-2>_{MsgEventName}
+                    <th .col-md-1 .col-lg-1>_{MsgEventLocation}
+                    <th .col-md-1 .col-lg-1>_{MsgEventDate}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
+                  <tbody>
+                  $forall Competition role points event result <- competitions
+                    $with Event _ name location _ date <- event
+                      <tr>
+                        <td>#{name}
+                        <td>#{location}
+                        <td>#{date}
+                        <td>#{role}
+                        <td>#{result}
+                        <td>#{points}
+          $maybe lindyresults <- lindy
+            <h3>Lindy
+              $forall Division (Details _ divisionName _) totalPoints competitions <- lindyresults
+                <h4>#{divisionName} - #{totalPoints} Points
+                <table .table .table-striped .table-hover>
+                  <thead>
+                    <th .col-md-2 .col-lg-2>_{MsgEventName}
+                    <th .col-md-1 .col-lg-1>_{MsgEventLocation}
+                    <th .col-md-1 .col-lg-1>_{MsgEventDate}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
+                    <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
+                  <tbody>
+                  $forall Competition role points event result <- competitions
+                    $with Event _ name location _ date <- event
+                      <tr>
+                        <td>#{name}
+                        <td>#{location}
+                        <td>#{date}
+                        <td>#{role}
+                        <td>#{result}
+                        <td>#{points}
