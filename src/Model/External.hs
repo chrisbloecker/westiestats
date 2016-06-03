@@ -1,14 +1,11 @@
-module Model
+module Model.External
   where
 
--------------------------------------------------------------------------------
-import ClassyPrelude
-import Data.IxSet
-import Import.DeriveJSON
-import Text.Blaze        (ToMarkup (..))
--------------------------------------------------------------------------------
-
-newtype Database = Database { persons :: [Person] }
+--------------------------------------------------------------------------------
+import           ClassyPrelude
+import           Import.DeriveJSON
+import           Text.Blaze         (ToMarkup (..))
+--------------------------------------------------------------------------------
 
 data Person = Person { personType       :: Text
                      , personDancer     :: Dancer
@@ -76,7 +73,6 @@ instance ToMarkup Competition where
 instance ToMarkup Event where
   toMarkup = toMarkup . show
 
-$(deriveJSON jsonOptions ''Database)
 $(deriveJSON jsonOptions ''Person)
 $(deriveJSON jsonOptions ''Dancer)
 $(deriveJSON jsonOptions ''Placements)
@@ -84,12 +80,3 @@ $(deriveJSON jsonOptions ''Division)
 $(deriveJSON jsonOptions ''Details)
 $(deriveJSON jsonOptions ''Competition)
 $(deriveJSON jsonOptions ''Event)
-
-instance Indexable Person where
-  empty = ixSet [ ixFun $ \p -> [ dancerWscid . personDancer $ p ]
-                ]
-
--------------------------------------------------------------------------------
-
---initDatabase :: Database
---initDatabase = Database { persons = empty }

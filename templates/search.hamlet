@@ -11,54 +11,27 @@
 
 <section.page-header>
   <div>
-    $case result
-      $of Left err
-        #{err}
-      $of Right person
-        $with Dancer _ firstname lastname wscid <- personDancer person
-          <h2>#{wscid} - #{firstname} #{lastname}
-        $maybe Placements wcs lindy <- personPlacements person
-          $maybe wcsresults <- wcs
-            <h3>West Coast Swing
-              $forall Division (Details _ divisionName _) totalPoints competitions <- wcsresults
-                <h4>#{divisionName} - #{totalPoints} Points
-                <table .table .table-striped .table-hover>
-                  <thead>
-                    <th .col-md-2 .col-lg-2>_{MsgEventName}
-                    <th .col-md-1 .col-lg-1>_{MsgEventLocation}
-                    <th .col-md-1 .col-lg-1>_{MsgEventDate}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
-                  <tbody>
-                  $forall Competition role points event result <- competitions
-                    $with Event _ name location _ date <- event
-                      <tr>
-                        <td>#{name}
-                        <td>#{location}
-                        <td>#{date}
-                        <td>#{role}
-                        <td>#{result}
-                        <td>#{points}
-          $maybe lindyresults <- lindy
-            <h3>Lindy
-              $forall Division (Details _ divisionName _) totalPoints competitions <- lindyresults
-                <h4>#{divisionName} - #{totalPoints} Points
-                <table .table .table-striped .table-hover>
-                  <thead>
-                    <th .col-md-2 .col-lg-2>_{MsgEventName}
-                    <th .col-md-1 .col-lg-1>_{MsgEventLocation}
-                    <th .col-md-1 .col-lg-1>_{MsgEventDate}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
-                    <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
-                  <tbody>
-                  $forall Competition role points event result <- competitions
-                    $with Event _ name location _ date <- event
-                      <tr>
-                        <td>#{name}
-                        <td>#{location}
-                        <td>#{date}
-                        <td>#{role}
-                        <td>#{result}
-                        <td>#{points}
+    $maybe competitor <- mcompetitor
+      $with Competitor wsdc name results <- competitor
+        <h2>#{wsdc} - #{name}
+          $forall Result division points competitions <- results
+            <h4>#{division} - #{points} Points
+            <table .table .table-striped .table-hover>
+              <thead>
+                <th .col-md-2 .col-lg-2>_{MsgEventName}
+                <th .col-md-1 .col-lg-1>_{MsgEventLocation}
+                <th .col-md-1 .col-lg-1>_{MsgEventDate}
+                <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
+                <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
+                <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
+              <tbody>
+              $forall Competition (Event name location date) role placement points <- competitions
+                <tr>
+                  <td>#{name}
+                  <td>#{location}
+                  <td>#{date}
+                  <td>#{role}
+                  <td>#{placement}
+                  <td>#{points}
+    $nothing
+      Competitor not found.

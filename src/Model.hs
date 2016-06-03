@@ -1,0 +1,142 @@
+module Model
+  where
+
+--------------------------------------------------------------------------------
+import           ClassyPrelude
+import           Text.Blaze          (ToMarkup (..))
+--------------------------------------------------------------------------------
+import qualified Model.External as E
+--------------------------------------------------------------------------------
+
+data Competitor = Competitor { competitorId      :: CompetitorId
+                             , competitorName    :: Text
+                             , competitorResults :: [Result]
+                             }
+  deriving (Eq, Ord)
+
+data Result = Result { resultDivision     :: Division
+                     , resultPoints       :: Integer
+                     , resultCompetitions :: [Competition]
+                     }
+  deriving (Eq, Ord)
+
+data Competition = Competition { competitionEvent     :: Event
+                               , competitionRole      :: Role
+                               , competitionPlacement :: Placement
+                               , competitionPoints    :: Integer
+                               }
+  deriving (Eq, Ord)
+
+data Event = Event { eventName     :: Text
+                   , eventLocation :: Text
+                   , eventDate     :: Text
+                   }
+  deriving (Eq, Ord)
+
+data Division = Newcomer
+              | Novice
+              | Intermediate
+              | Advanced
+              | Allstars
+              | Champions
+              | Invitational
+              | Professional
+              | Juniors
+              | Sophisticated
+              | Masters
+              | Teacher
+  deriving (Eq, Ord, Show)
+
+data Placement = One
+               | Two
+               | Three
+               | Four
+               | Five
+               | Finals
+  deriving (Eq, Ord, Show)
+
+data Role = Leader
+          | Follower
+  deriving (Eq, Ord, Show)
+
+
+newtype CompetitorId = CompetitorId { unCompetitorId :: Integer } deriving (Eq, Ord)
+
+--------------------------------------------------------------------------------
+
+instance ToMarkup Division where
+  toMarkup = toMarkup . show
+
+instance ToMarkup Placement where
+  toMarkup One    = "1"
+  toMarkup Two    = "2"
+  toMarkup Three  = "3"
+  toMarkup Four   = "4"
+  toMarkup Five   = "5"
+  toMarkup Finals = "F"
+
+instance ToMarkup Role where
+  toMarkup = toMarkup . show
+
+instance ToMarkup CompetitorId where
+  toMarkup = toMarkup . unCompetitorId
+
+--------------------------------------------------------------------------------
+
+toDivision :: Text -> Division
+toDivision "Newcomer"      = Newcomer
+toDivision "Novice"        = Novice
+toDivision "Intermediate"  = Intermediate
+toDivision "Advanced"      = Advanced
+toDivision "All-Stars"     = Allstars
+toDivision "Champions"     = Champions
+toDivision "Invitational"  = Invitational
+toDivision "Professional"  = Professional
+toDivision "Juniors"       = Juniors
+toDivision "Sophisticated" = Sophisticated
+toDivision "Masters"       = Masters
+toDivision "Teacher"       = Teacher
+toDivision d               = error ("Unknown division " ++ unpack d)
+
+toPlacement :: Text -> Placement
+toPlacement "1" = One
+toPlacement "2" = Two
+toPlacement "3" = Three
+toPlacement "4" = Four
+toPlacement "5" = Five
+toPlacement "F" = Finals
+toPlacement p   = error ("Unknown placement " ++ unpack p)
+
+toRole :: Text -> Role
+toRole "leader"   = Leader
+toRole "follower" = Follower
+toRole r          = error ("Unknown role" ++ unpack r)
+
+fromPerson :: E.Person -> Competitor
+fromPerson E.Person{..} =
+  Competitor { competitorId      = CompetitorId $ E.dancerWscid personDancer
+             , competitorName    = unwords [E.dancerFirstName personDancer, E.dancerLastName personDancer]
+             , competitorResults = fromPlacements personPlacements
+             }
+
+fromPlacements :: Maybe E.Placements -> [Result]
+fromPlacements Nothing               = []
+fromPlacements (Just E.Placements{..}) =
+  case westCoastSwing of
+    Nothing -> []
+    Just ds -> fmap fromDivision ds
+
+fromDivision :: E.Division -> Result
+fromDivision E.Division{..} =
+  Result { resultDivision     = toDivision (E.detailsName divisionDetails)
+         , resultPoints       = divisionTotalPoints
+         , resultCompetitions = fmap fromCompetition divisionCompetitions
+         }
+
+fromCompetition :: E.Competition -> Competition
+fromCompetition E.Competition{..} =
+  Competition { competitionEvent     = Event (E.eventName competitionEvent) (E.eventLocation competitionEvent) (E.eventDate competitionEvent)
+              , competitionRole      = toRole competitionRole
+              , competitionPlacement = toPlacement competitionResult
+              , competitionPoints    = competitionPoints
+              }

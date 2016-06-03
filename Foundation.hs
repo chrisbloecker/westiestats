@@ -1,13 +1,20 @@
-module Foundation where
-
-import Import.NoFoundation
-import Text.Hamlet                 (hamletFile)
-import Text.Jasmine                (minifym)
-import Yesod.Core.Types            (Logger)
-import Yesod.Default.Util          (addStaticContentExternal)
-import qualified Yesod.Core.Unsafe as Unsafe
+module Foundation
+  where
+--------------------------------------------------------------------------------
+import           Import.NoFoundation
+import           Text.Hamlet                    (hamletFile)
+import           Text.Jasmine                   (minifym)
+import           Yesod.Core.Types               (Logger)
+import           Yesod.Default.Util             (addStaticContentExternal)
+--------------------------------------------------------------------------------
+import qualified Yesod.Core.Unsafe    as Unsafe
 import qualified Data.CaseInsensitive as CI
-import qualified Data.Text.Encoding as TE
+import qualified Data.Text.Encoding   as TE
+--------------------------------------------------------------------------------
+import           Database
+import           Data.Acid
+import           Data.Acid.Advanced
+--------------------------------------------------------------------------------
 
 -- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -18,6 +25,7 @@ data App = App
     , appStatic      :: Static -- ^ Settings for static file serving.
     , appHttpManager :: Manager
     , appLogger      :: Logger
+    , getDatabase    :: AcidState Database
     }
 
 -- Set up i18n messages. See the message folder.
@@ -134,3 +142,14 @@ unsafeHandler = Unsafe.fakeHandlerGetLogger appLogger
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
 -- https://github.com/yesodweb/yesod/wiki/Serve-static-files-from-a-separate-domain
 -- https://github.com/yesodweb/yesod/wiki/i18n-messages-in-the-scaffolding
+
+
+acidQuery :: (QueryEvent event, MethodState event ~ Database) => event -> Handler (EventResult event)
+acidQuery q = do
+  db <- getDatabase <$> getYesod
+  query' db q
+
+acidUpdate :: (UpdateEvent event, MethodState event ~ Database) => event -> Handler (EventResult event)
+acidUpdate q = do
+  db <- getDatabase <$> getYesod
+  update' db q

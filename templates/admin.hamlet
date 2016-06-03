@@ -1,0 +1,10 @@
+<h1.jumbotron>
+  Admin page
+
+<section.page-header>
+  <div>
+    <form method=post action=@{AdminR} enctype=#{loadEnctype}>
+      ^{loadWidget}
+      <button .btn .btn-primary type="submit">
+         Search
+         <span class="glyphicon glyphicon-refresh"></span>

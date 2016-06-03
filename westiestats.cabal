@@ -12,18 +12,22 @@ Flag library-only
     Default:       False
 
 library
-    hs-source-dirs: ., app
+    hs-source-dirs: ., app, src
     exposed-modules: Application
+                     Competitor
+                     Database
                      Foundation
                      Import
                      Import.DeriveJSON
                      Import.NoFoundation
                      Model
+                     Model.External
                      Settings
                      Settings.StaticFiles
-                     Handler.Common
+                     Handler.Admin
                      Handler.Home
                      Handler.Comment
+                     Handler.Common
                      Handler.Search
 
     if flag(dev) || flag(library-only)
@@ -85,6 +89,9 @@ library
                  , ixset
                  , HTTP
                  , blaze-markup
+                 , acid-state
+                 , safecopy
+                 , mtl
 
 executable         westiestats
     if flag(library-only)

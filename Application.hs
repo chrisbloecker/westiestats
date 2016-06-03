@@ -11,7 +11,7 @@ module Application
     -- * for GHCI
     , handler
     ) where
-
+--------------------------------------------------------------------------------
 import Control.Monad.Logger                 (liftLoc)
 import Import
 import Language.Haskell.TH.Syntax           (qLocation)
@@ -26,13 +26,18 @@ import Network.Wai.Middleware.RequestLogger (Destination (Logger),
                                              mkRequestLogger, outputFormat)
 import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
                                              toLogStr)
-
+--------------------------------------------------------------------------------
+import Database
+import Data.Acid
+--------------------------------------------------------------------------------
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
-import Handler.Common
+import Handler.Admin
 import Handler.Home
 import Handler.Comment
+import Handler.Common
 import Handler.Search
+--------------------------------------------------------------------------------
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -52,6 +57,8 @@ makeFoundation appSettings = do
     appStatic <-
         (if appMutableStatic appSettings then staticDevel else static)
         (appStaticDir appSettings)
+
+    getDatabase <- openLocalState initDatabase
 
     -- Return the foundation
     return App {..}
