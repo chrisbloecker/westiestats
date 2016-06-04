@@ -1,0 +1,17 @@
+<h1 .jumbotron .text-center>
+  Event List
+
+<section .page-header>
+  <table .table .table-striped .table-hover>
+    <thead>
+      <th .col-md-3 .col-lg-3>Name
+      <th .col-md-3 .col-lg-3>Location
+      <th .col-md-6 .col-lg-6>Years
+    <tbody>
+      $forall EventDetails id name location results <- events
+        <tr>
+          <td>#{name}
+          <td>#{location}
+          <td>
+            $forall year <- keys results
+              <a href="@{EventR id year}">#{year}

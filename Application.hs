@@ -27,16 +27,17 @@ import Network.Wai.Middleware.RequestLogger (Destination (Logger),
 import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
                                              toLogStr)
 --------------------------------------------------------------------------------
-import Database
+import Database (initDatabase)
 import Data.Acid
 --------------------------------------------------------------------------------
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
 import Handler.Admin
+import Handler.Event
 import Handler.Home
 import Handler.Comment
 import Handler.Common
-import Handler.Search
+import Handler.Competitor
 --------------------------------------------------------------------------------
 
 -- This line actually creates our YesodDispatch instance. It is the second half

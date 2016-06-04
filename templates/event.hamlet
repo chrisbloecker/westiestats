@@ -1,0 +1,65 @@
+<h1 .jumbotron .text-center>
+  #{eventDetailsName} - #{eventYear}
+
+<section .page-header>
+  <ul .nav .nav-pills .text-center>
+    $forall year <- years
+      $if year == eventYear
+        <li role="presentation" .active>
+          <a href="@{EventR eventId year}">#{year}
+      $else
+        <li role="presentation">
+          <a href="@{EventR eventId year}">#{year}
+
+<section .page-header>
+  $forall division <- M.keys thisYear
+    <div .row>
+      <h3 .text-center>#{division}
+      <div .col-md-6 .col-lg-6>
+        <table .table .table-striped .table-hover>
+          <thead>
+            <th .col-md-1 .col-lg-1>Place
+            <th .col-md-2 .col-lg-2>Leader
+            <th .col-md-2 .col-lg-2>Follower
+          <tbody>
+            $forall placement <- [One, Two, Three, Four, Five]
+              $with leaders <- getEntry division placement Leader thisYear
+                $with followers <- getEntry division placement Follower thisYear
+                  <tr>
+                    <td>#{placement}
+                    <td>
+                      $forall (leader, leadername, _, _) <- leaders
+                        <a href="@{CompetitorR}?wscid=#{leader}">#{leadername}
+                        <br>
+                    <td>
+                      $forall (follower, followername, _, _) <- followers
+                        <a href="@{CompetitorR}?wscid=#{follower}">#{followername}
+                        <br>
+
+      <div .col-md-3 .col-lg-3>
+        <table .table .table-striped .table-hover>
+          <thead>
+            <th .col-md-1 .col-lg-1>Place
+            <th .col-md-2 .col-lg-2>Leader
+          <tbody>
+            $with leaders <- getEntry division Finals Leader thisYear
+              <tr>
+                <td>#{Finals}
+                <td>
+                  $forall (leader, leadername, _, _) <- leaders
+                    <a href="@{CompetitorR}?wscid=#{leader}">#{leadername}
+                    <br>
+
+      <div .col-md-3 .col-lg-3>
+        <table .table .table-striped .table-hover>
+          <thead>
+            <th .col-md-1 .col-lg-1>Place
+            <th .col-md-2 .col-lg-2>Follower
+          <tbody>
+            $with followers <- getEntry division Finals Follower thisYear
+              <tr>
+                <td>#{Finals}
+                <td>
+                  $forall (follower, followername, _, _) <- followers
+                    <a href="@{CompetitorR}?wscid=#{follower}">#{followername}
+                    <br>

@@ -25,10 +25,11 @@ library
                      Settings
                      Settings.StaticFiles
                      Handler.Admin
+                     Handler.Event
                      Handler.Home
                      Handler.Comment
                      Handler.Common
-                     Handler.Search
+                     Handler.Competitor
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -92,6 +93,7 @@ library
                  , acid-state
                  , safecopy
                  , mtl
+                 , path-pieces
 
 executable         westiestats
     if flag(library-only)

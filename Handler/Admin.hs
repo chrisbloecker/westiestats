@@ -23,8 +23,10 @@ postAdminR = do
       forM_ [from .. to] $ \wscid -> do
         mcompetitor <- liftIO $ loadCompetitor (fromIntegral wscid)
         case mcompetitor of
-          Left  err        -> $(logInfo) ("No entry for id " `T.append` (pack . show $ wscid) `T.append` ":" `T.append` (pack . show $ err))
-          Right competitor -> acidUpdate (InsertCompetitor competitor)
+          Left err -> $(logInfo) ("No entry for id " `T.append` (pack . show $ wscid) `T.append` ":" `T.append` (pack . show $ err))
+          Right (competitor, eventDetails) -> do
+            acidUpdate (InsertCompetitor competitor)
+            forM_ eventDetails $ \e -> acidUpdate (InsertEventDetails e)
       redirect AdminR
     _ -> error "Something went wrong :("
 

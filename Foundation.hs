@@ -11,6 +11,8 @@ import qualified Yesod.Core.Unsafe    as Unsafe
 import qualified Data.CaseInsensitive as CI
 import qualified Data.Text.Encoding   as TE
 --------------------------------------------------------------------------------
+import           Model
+--------------------------------------------------------------------------------
 import           Database
 import           Data.Acid
 import           Data.Acid.Advanced
@@ -76,6 +78,7 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
 
+        navbar <- widgetToPageContent $(widgetFile "navbar")
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final

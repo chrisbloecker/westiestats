@@ -4,7 +4,6 @@ module Handler.Search
 import           Database
 import           Import
 import           Model
-import           Yesod.Form.Bootstrap3      (BootstrapFormLayout (..), renderBootstrap3, withSmallInput)
 --------------------------------------------------------------------------------
 
 getSearchR :: Handler Html
@@ -18,10 +17,6 @@ postSearchR = do
     ((searchResult, searchWidget), searchEnctype) <- runFormPost searchForm
     case searchResult of
         FormSuccess wscid -> do
-            mcompetitor <- acidQuery (GetCompetitor (fromIntegral wscid))
+            mcompetitor <- acidQuery (GetCompetitor wscid)
             defaultLayout $(widgetFile "search")
         _ -> redirect SearchR
-
-searchForm :: Form Int
-searchForm = renderBootstrap3 BootstrapBasicForm $
-    areq intField (withSmallInput "wscid ") Nothing

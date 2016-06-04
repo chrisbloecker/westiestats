@@ -6,5 +6,7 @@
 / HomeR GET POST
 
 /comments CommentR POST
-/search SearchR GET POST
+/competitor CompetitorR GET
+/event/#EventId/#EventYear EventR GET
+/events EventListR GET
 /admin AdminR GET POST
