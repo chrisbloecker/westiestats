@@ -4,10 +4,12 @@ module Database
   where
 --------------------------------------------------------------------------------
 import           ClassyPrelude       hiding (empty)
+import           Competitor                 (getPointsAsIn)
 import           Control.Monad.State        (get, put)
 import           Data.Acid                  (Update, Query, makeAcidic)
-import           Data.IxSet
-import           Data.SafeCopy              (deriveSafeCopy, base)
+import           Data.IxSet          hiding ((&&&))
+import           Data.Maybe                 (fromJust)
+import           Data.SafeCopy              (Migrate (..), deriveSafeCopy, base, extension)
 import           Model
 --------------------------------------------------------------------------------
 import qualified Data.IxSet          as Ix  (toList)
@@ -32,7 +34,8 @@ instance Indexable EventDetails where
 --------------------------------------------------------------------------------
 deriveSafeCopy 0 'base ''Database
 deriveSafeCopy 0 'base ''Competitor
-deriveSafeCopy 0 'base ''Result
+deriveSafeCopy 0 'base ''Result_v0
+deriveSafeCopy 1 'extension ''Result
 deriveSafeCopy 0 'base ''Competition
 deriveSafeCopy 0 'base ''Event
 deriveSafeCopy 0 'base ''EventDetails
@@ -42,8 +45,18 @@ deriveSafeCopy 0 'base ''Role
 --------------------------------------------------------------------------------
 deriveSafeCopy 0 'base ''CompetitorId
 deriveSafeCopy 0 'base ''WscId
+deriveSafeCopy 0 'base ''ResultPoints
 deriveSafeCopy 0 'base ''EventId
 deriveSafeCopy 0 'base ''EventYear
+--------------------------------------------------------------------------------
+
+instance Migrate Result where
+  type MigrateFrom Result = Result_v0
+  migrate Result_v0{..} = Result { resultDivision     = resultDivision_v0
+                                 , resultPoints       = ResultPoints resultPoints_v0
+                                 , resultCompetitions = resultCompetitions_v0
+                                 }
+
 --------------------------------------------------------------------------------
 
 initDatabase :: Database
@@ -60,6 +73,12 @@ insertCompetitor :: Competitor -> Update Database ()
 insertCompetitor competitor@Competitor{..} = do
   db@Database{..} <- get
   put $ db { competitors = updateIx competitorId competitor competitors }
+
+
+getMostPoints :: Role -> Division -> Query Database [(Competitor, ResultPoints)]
+getMostPoints role division = do
+  cs <- fmap (Ix.toList . getEQ division . competitors) ask
+  return . reverse . sortOn snd . fmap (id &&& fromJust . getPointsAsIn role division) $ cs
 
 
 getEventDetails :: EventId -> Query Database (Maybe EventDetails)
@@ -79,6 +98,8 @@ getEvents = fmap (Ix.toList . events) ask
 --------------------------------------------------------------------------------
 makeAcidic ''Database [ 'getCompetitor
                       , 'insertCompetitor
+
+                      , 'getMostPoints
 
                       , 'getEventDetails
                       , 'insertEventDetails

@@ -20,8 +20,14 @@ data Competitor = Competitor { competitorId      :: CompetitorId
                              }
   deriving (Eq, Ord)
 
+data Result_v0 = Result_v0 { resultDivision_v0     :: Division
+                           , resultPoints_v0       :: Integer
+                           , resultCompetitions_v0 :: [Competition]
+                           }
+  deriving (Eq, Ord)
+
 data Result = Result { resultDivision     :: Division
-                     , resultPoints       :: Integer
+                     , resultPoints       :: ResultPoints
                      , resultCompetitions :: [Competition]
                      }
   deriving (Eq, Ord)
@@ -62,7 +68,7 @@ data Division = Newcomer
               | Sophisticated
               | Masters
               | Teacher
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Enum, Show)
 
 data Placement = One
                | Two
@@ -78,6 +84,7 @@ data Role = Leader
 
 newtype CompetitorId = CompetitorId { unCompetitorId :: Integer } deriving (Eq, Ord)
 newtype WscId        = WscId        { unWscId        :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
+newtype ResultPoints = ResultPoints { unResultPoints :: Integer } deriving (Eq, Ord, Show)
 newtype EventId      = EventId      { unEventId      :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype EventYear    = EventYear    { unEventYear    :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 --------------------------------------------------------------------------------
@@ -101,6 +108,9 @@ instance ToMarkup CompetitorId where
 
 instance ToMarkup WscId where
   toMarkup = toMarkup . unWscId
+
+instance ToMarkup ResultPoints where
+  toMarkup = toMarkup . unResultPoints
 
 instance ToMarkup EventYear where
   toMarkup = toMarkup . unEventYear
@@ -161,7 +171,7 @@ fromPlacements (Just E.Placements{..}) =
 fromDivision :: E.Division -> Result
 fromDivision E.Division{..} =
   Result { resultDivision     = toDivision (E.detailsName divisionDetails)
-         , resultPoints       = divisionTotalPoints
+         , resultPoints       = ResultPoints divisionTotalPoints
          , resultCompetitions = fmap fromCompetition divisionCompetitions
          }
 

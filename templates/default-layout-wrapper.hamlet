@@ -43,14 +43,13 @@ $newline never
 
     <script>
       document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
-  <body style="padding-top: 70px;">
+  <body style="padding-top: 70px; padding-bottom: 35px;">
     <div class="container">
       <header>
       <div id="main" role="main">
         ^{pageBody navbar}
         ^{pageBody pc}
-      <footer>
-        #{appCopyright $ appSettings master}
+      ^{pageBody footer}
 
     $maybe analytics <- appAnalytics $ appSettings master
       <script>

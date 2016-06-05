@@ -79,6 +79,7 @@ instance Yesod App where
         mmsg <- getMessage
 
         navbar <- widgetToPageContent $(widgetFile "navbar")
+        footer <- widgetToPageContent $(widgetFile "footer")
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final

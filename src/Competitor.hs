@@ -1,8 +1,10 @@
 module Competitor
   ( loadCompetitor
+  , getPointsAsIn
   ) where
 --------------------------------------------------------------------------------
-import           Import
+import           CBPrelude
+import           ClassyPrelude
 import           Data.Aeson                 (eitherDecode')
 import           Data.Text             as T (pack, replace)
 import           Model
@@ -33,3 +35,9 @@ extractEventDetails Competitor{..} =
                                               }
             ) resultCompetitions
             ) competitorResults
+
+getPointsAsIn :: Role -> Division -> Competitor -> Maybe ResultPoints
+getPointsAsIn role division Competitor{..} =
+  case filter (resultDivision `is` division) competitorResults of
+    []             -> Nothing
+    (Result{..}:_) -> Just . ResultPoints . sum . map competitionPoints . filter (competitionRole `is` role) $ resultCompetitions

@@ -1,0 +1,8 @@
+<nav .navbar .navbar-default .navbar-fixed-bottom role="navigation" style="min-height:25px">
+  <footer .container>
+    <div .text-center>
+      <span .label .label-success>
+        #{appCopyright $ appSettings master}
+      \ #
+      <span .label .label-default>
+        Built with <a style="color:#FFFFFF" href="http://www.haskell.org/">Haskell</a>, <a style="color:#FFFFFF" href="http://www.yesodweb.com/">Yesod</a>, <a style="color:#FFFFFF" href="http://acid-state.seize.it/">acid-state</a> and <a style="color:#FFFFFF" href="http://getbootstrap.com/">Bootstrap</a>

@@ -20,5 +20,5 @@ ip-from-header: "_env:IP_FROM_HEADER:false"
 # mutable-static: false
 # skip-combining: false
 
-copyright: Creative Commons (CC) 2015 by Christopher Blöcker
+copyright: Creative Commons (CC) 2016 by Christopher Blöcker
 #analytics: UA-YOURCODE

@@ -1,6 +1,3 @@
-<h1 .jumbotron .text-center>
-  Event List
-
 <section .page-header>
   <table .table .table-striped .table-hover>
     <thead>
@@ -13,5 +10,6 @@
           <td>#{name}
           <td>#{location}
           <td>
-            $forall year <- keys results
-              <a href="@{EventR id year}">#{year}
+            $forall year <- reverse $ keys results
+              <a .label .label-primary href="@{EventR id year}">
+                #{year}
