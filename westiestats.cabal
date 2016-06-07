@@ -102,9 +102,26 @@ executable         westiestats
 
     main-is:           main.hs
     hs-source-dirs:    app
-    build-depends:     base, westiestats
+    build-depends:     base
+                     , westiestats
 
     ghc-options:       -threaded -rtsopts -with-rtsopts=-N
+
+executable          downloader
+    if flag(library-only)
+        Buildable: False
+
+    main-is:            downloader.hs
+    hs-source-dirs:     downloader
+    build-depends:      base
+                      , aeson
+                      , parallel-io
+                      , time
+                      , optparse-applicative
+                      , bytestring
+                      , westiestats
+
+    ghc-options:        -threaded -rtsopts -with-rtsopts=-N
 
 test-suite test
     type:              exitcode-stdio-1.0

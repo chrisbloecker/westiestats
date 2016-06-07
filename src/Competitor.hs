@@ -1,5 +1,6 @@
 module Competitor
-  ( loadCompetitor
+  ( loadDancer
+  , loadCompetitor
   , getPointsAsIn
   ) where
 --------------------------------------------------------------------------------
@@ -18,11 +19,16 @@ import qualified Model.External        as E
 url :: Int -> String
 url n = "http://wsdc-points.us-west-2.elasticbeanstalk.com/lookup/find?num=" ++ show n
 
-loadCompetitor :: Int -> IO (Either String (Competitor, [EventDetails]))
-loadCompetitor n = do
-  body <- getResponseBody =<< simpleHTTP (postRequest $ url n)
-  let mcompetitor = eitherDecode' . encodeUtf8 . fromStrict . (T.replace ",\"placements\":[]" "" :: Text -> Text) . T.pack $ body :: Either String E.Person
-  return . fmap ((id &&& extractEventDetails) . fromPerson) $ mcompetitor
+loadDancer :: WscId -> IO (Either String E.Person)
+loadDancer (WscId wscid) = do
+  body <- getResponseBody =<< simpleHTTP (postRequest $ url (fromIntegral wscid))
+  return . eitherDecode' . encodeUtf8 . fromStrict . (T.replace ",\"placements\":[]" "" :: Text -> Text) . T.pack $ body
+
+loadCompetitor :: WscId -> IO (Either String (Competitor, [EventDetails]))
+loadCompetitor wscid = do
+  mp <- (loadDancer wscid)
+  return $ fmap ((id &&& extractEventDetails) . fromPerson) mp
+--loadCompetitor wscid = fmap ((id &&& extractEventDetails) . fromPerson) (loadDancer wscid)
 
 extractEventDetails :: Competitor -> [EventDetails]
 extractEventDetails Competitor{..} =

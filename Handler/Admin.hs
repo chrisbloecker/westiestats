@@ -4,6 +4,7 @@ module Handler.Admin
 import           Competitor
 import           Database
 import           Import
+import           Model                      (WscId (..))
 import           Yesod.Form.Bootstrap3      (BootstrapFormLayout (..), renderBootstrap3, withSmallInput)
 --------------------------------------------------------------------------------
 import qualified Data.Text             as T
@@ -21,7 +22,7 @@ postAdminR = do
   case loadResult of
     FormSuccess (from, to) -> do
       forM_ [from .. to] $ \wscid -> do
-        mcompetitor <- liftIO $ loadCompetitor (fromIntegral wscid)
+        mcompetitor <- liftIO $ loadCompetitor (WscId $ fromIntegral wscid)
         case mcompetitor of
           Left err -> $(logInfo) ("No entry for id " `T.append` (pack . show $ wscid) `T.append` ":" `T.append` (pack . show $ err))
           Right (competitor, eventDetails) -> do
