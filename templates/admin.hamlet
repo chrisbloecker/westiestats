@@ -2,6 +2,6 @@
   <div>
     <form method=post action=@{AdminR} enctype=#{loadEnctype}>
       ^{loadWidget}
-      <button .btn .btn-primary type="submit">
-         Search
-         <span class="glyphicon glyphicon-refresh"></span>
+      <button .btn .btn-success type="submit">
+         <span .glyphicon .glyphicon-upload>
+         Upload

@@ -31,5 +31,5 @@ postAdminR = do
     _ -> error "Something went wrong :("
 
 loadForm :: Form FileInfo
-loadForm = renderBootstrap3 BootstrapBasicForm $
-  fileAFormReq "Choose a file"
+loadForm = renderBootstrap3 BootstrapInlineForm $
+     fileAFormReq "Choose a file"

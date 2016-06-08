@@ -79,8 +79,8 @@ insertEventDetails eventDetails@EventDetails{..} = do
   db@Database{..} <- get
   let moldDetails = getOne . getEQ eventDetailsId $ events
   case moldDetails of
-    Nothing         -> put $ db { events = updateIx eventDetailsId  eventDetails                       events }
-    Just oldDetails -> put $ db { events = updateIx eventDetailsId (eventDetails `mappend` oldDetails) events }
+    Nothing         -> put $ db { events = updateIx eventDetailsId  eventDetails                                   events }
+    Just oldDetails -> put $ db { events = updateIx eventDetailsId (eventDetails `combineEventDetails` oldDetails) events }
 
 getEvents :: Query Database [EventDetails]
 getEvents = fmap (Ix.toList . events) ask

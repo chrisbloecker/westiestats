@@ -115,12 +115,14 @@ instance ToMarkup ResultPoints where
 instance ToMarkup EventYear where
   toMarkup = toMarkup . unEventYear
 
-instance Monoid EventDetails where
-  ed1 `mappend` ed2 = EventDetails { eventDetailsId       = eventDetailsId       ed1
-                                   , eventDetailsName     = eventDetailsName     ed1
-                                   , eventDetailsLocation = eventDetailsLocation ed1
-                                   , eventDetailsResults  = M.unionWith (M.unionWith S.union) (eventDetailsResults ed1) (eventDetailsResults ed2)
-                                   }
+--------------------------------------------------------------------------------
+
+combineEventDetails :: EventDetails -> EventDetails -> EventDetails
+combineEventDetails ed1 ed2 = EventDetails { eventDetailsId       = eventDetailsId       ed1
+                                           , eventDetailsName     = eventDetailsName     ed1
+                                           , eventDetailsLocation = eventDetailsLocation ed1
+                                           , eventDetailsResults  = M.unionWith (M.unionWith S.union) (eventDetailsResults ed1) (eventDetailsResults ed2)
+                                           }
 
 --------------------------------------------------------------------------------
 
