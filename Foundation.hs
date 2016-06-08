@@ -97,6 +97,9 @@ instance Yesod App where
     -- Default to Authorized for now.
     isAuthorized _ _ = return Authorized
 
+    maximumContentLength _ (Just AdminR) = Just $ 25 * 1024 * 1024 -- 25MB
+    maximumContentLength _ _             = Just $  1 * 1024 * 1024 --  1MB
+
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -157,3 +160,8 @@ acidUpdate :: (UpdateEvent event, MethodState event ~ Database) => event -> Hand
 acidUpdate q = do
   db <- getDatabase <$> getYesod
   update' db q
+
+acidUpdates :: (UpdateEvent event, MethodState event ~ Database) => [event] -> Handler ()
+acidUpdates us = do
+  db <- getDatabase <$> getYesod
+  liftIO $ groupUpdates db us

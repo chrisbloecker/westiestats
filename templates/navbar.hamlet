@@ -19,3 +19,8 @@
         <li>
           <a href="@{EventListR}">
             Events
+
+      <ul .nav .navbar-nav .navbar-right>
+        <li>
+          <a href="@{AdminR}">
+            Admin

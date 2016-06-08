@@ -4,7 +4,6 @@ module Handler.Home
 import Database
 import Import
 import Model
-import Text.Julius (RawJS (..))
 --------------------------------------------------------------------------------
 
 getHomeR :: Handler Html

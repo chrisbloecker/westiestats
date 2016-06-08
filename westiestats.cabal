@@ -95,6 +95,7 @@ library
                  , safecopy
                  , mtl
                  , path-pieces
+                 , conduit-extra
 
 executable         westiestats
     if flag(library-only)

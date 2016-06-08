@@ -1,37 +1,35 @@
 module Handler.Admin
   where
 --------------------------------------------------------------------------------
-import           Competitor
+import           Competitor                 (extractEventDetails)
 import           Database
+import           Data.Conduit.Binary
 import           Import
-import           Model                      (WscId (..))
-import           Yesod.Form.Bootstrap3      (BootstrapFormLayout (..), renderBootstrap3, withSmallInput)
---------------------------------------------------------------------------------
-import qualified Data.Text             as T
+import           Import.DeriveJSON
+import           Model                      (Competitor, fromPerson)
+import           Yesod.Form.Bootstrap3      (BootstrapFormLayout (..), renderBootstrap3)
 --------------------------------------------------------------------------------
 
 getAdminR :: Handler Html
 getAdminR = do
   (loadWidget, loadEnctype) <- generateFormPost loadForm
-
   defaultLayout $(widgetFile "admin")
 
 postAdminR :: Handler Html
 postAdminR = do
-  ((loadResult, loadWidget), loadEnctype) <- runFormPost loadForm
+  ((loadResult, _), _) <- runFormPost loadForm
   case loadResult of
-    FormSuccess (from, to) -> do
-      forM_ [from .. to] $ \wscid -> do
-        mcompetitor <- liftIO $ loadCompetitor (WscId $ fromIntegral wscid)
-        case mcompetitor of
-          Left err -> $(logInfo) ("No entry for id " `T.append` (pack . show $ wscid) `T.append` ":" `T.append` (pack . show $ err))
-          Right (competitor, eventDetails) -> do
-            acidUpdate (InsertCompetitor competitor)
-            forM_ eventDetails $ \e -> acidUpdate (InsertEventDetails e)
+    FormSuccess fileInfo -> do
+      fileBytes <- runResourceT $ fileSource fileInfo $$ sinkLbs
+      let mpersons = fmap fromPerson <$> eitherDecode' fileBytes :: Either String [Competitor]
+      case mpersons of
+        Left err      -> error $ pack err
+        Right persons -> do
+          acidUpdates (map InsertCompetitor   persons)
+          acidUpdates (map InsertEventDetails (concatMap extractEventDetails persons))
       redirect AdminR
     _ -> error "Something went wrong :("
 
-loadForm :: Form (Int, Int)
-loadForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> areq intField (withSmallInput "from ") Nothing
-    <*> areq intField (withSmallInput "to ") Nothing
+loadForm :: Form FileInfo
+loadForm = renderBootstrap3 BootstrapBasicForm $
+  fileAFormReq "Choose a file"

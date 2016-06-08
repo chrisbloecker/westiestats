@@ -1,13 +1,14 @@
 module Competitor
   ( loadDancer
   , loadCompetitor
+  , extractEventDetails
   , getPointsAsIn
   ) where
 --------------------------------------------------------------------------------
 import           CBPrelude
 import           ClassyPrelude
-import           Data.Aeson                 (eitherDecode')
 import           Data.Text             as T (pack, replace)
+import           Import.DeriveJSON
 import           Model
 import           Network.HTTP               (simpleHTTP, postRequest, getResponseBody)
 --------------------------------------------------------------------------------

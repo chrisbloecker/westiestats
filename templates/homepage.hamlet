@@ -1,4 +1,4 @@
-<section .page-header>
+<section>
   <h2 .text-center>Most points
   $forall (division, mp) <- divisionsAndMostPoints
     <h3>#{division}

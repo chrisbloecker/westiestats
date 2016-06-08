@@ -1,7 +1,4 @@
-<h1.jumbotron>
-  Admin page
-
-<section.page-header>
+<section>
   <div>
     <form method=post action=@{AdminR} enctype=#{loadEnctype}>
       ^{loadWidget}

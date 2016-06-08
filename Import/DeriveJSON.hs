@@ -1,5 +1,5 @@
 module Import.DeriveJSON
-  ( FromJSON, decode'
+  ( FromJSON, decode', eitherDecode'
   , deriveJSON, jsonOptions
   , Text
   , encodeUtf8
@@ -7,7 +7,7 @@ module Import.DeriveJSON
 
 -------------------------------------------------------------------------------
 import ClassyPrelude
-import Data.Aeson    (FromJSON, decode')
+import Data.Aeson    (FromJSON, decode', eitherDecode')
 import Data.Aeson.TH (Options (..), SumEncoding (..), deriveJSON)
 -------------------------------------------------------------------------------
 
