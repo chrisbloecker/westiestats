@@ -7,6 +7,7 @@ RUN apt-get update && \
 
 # add files
 RUN mkdir /westiestats
+RUN mkdir /westiestats/state/
 ADD westiestats /westiestats/
 ADD docker-entrypoint.sh /westiestats/
 ADD config /westiestats/config/
