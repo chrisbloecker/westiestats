@@ -9,4 +9,4 @@
 /competitor CompetitorR GET
 /event/#EventId/#EventYear EventR GET
 /events EventListR GET
-/admin AdminR GET POST
+--/admin AdminR GET POST

@@ -89,6 +89,7 @@ getEvents :: Query Database [EventDetails]
 getEvents = fmap (Ix.toList . events) ask
 
 --------------------------------------------------------------------------------
+
 makeAcidic ''Database [ 'getCompetitor
                       , 'insertCompetitor
 

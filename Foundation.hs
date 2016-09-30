@@ -97,7 +97,7 @@ instance Yesod App where
     -- Default to Authorized for now.
     isAuthorized _ _ = return Authorized
 
-    maximumContentLength _ (Just AdminR) = Just $ 25 * 1024 * 1024 -- 25MB
+    --maximumContentLength _ (Just AdminR) = Just $ 25 * 1024 * 1024 -- 25MB
     maximumContentLength _ _             = Just $  1 * 1024 * 1024 --  1MB
 
     -- This function creates static content files in the static folder

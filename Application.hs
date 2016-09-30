@@ -16,28 +16,24 @@ import Control.Monad.Logger                 (liftLoc)
 import Import
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.Wai (Middleware)
-import Network.Wai.Handler.Warp             (Settings, defaultSettings,
-                                             defaultShouldDisplayException,
-                                             runSettings, setHost,
-                                             setOnException, setPort, getPort)
-import Network.Wai.Middleware.RequestLogger (Destination (Logger),
-                                             IPAddrSource (..),
-                                             OutputFormat (..), destination,
-                                             mkRequestLogger, outputFormat)
-import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
-                                             toLogStr)
+import Network.Wai.Handler.Warp             (Settings, defaultSettings, defaultShouldDisplayException, runSettings, setHost, setOnException, setPort, getPort)
+import Network.Wai.Middleware.RequestLogger (Destination (Logger), IPAddrSource (..), OutputFormat (..), destination, mkRequestLogger, outputFormat)
+import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet, toLogStr)
 --------------------------------------------------------------------------------
-import Database (initDatabase)
+import Competitor                           (extractEventDetails)
+import Database
 import Data.Acid
+import Data.Acid.Advanced
+import Import.DeriveJSON
+import Model                                (Competitor, fromPerson)
 --------------------------------------------------------------------------------
--- Import all relevant handler modules here.
--- Don't forget to add new modules to your cabal file!
-import Handler.Admin
-import Handler.Event
-import Handler.Home
+--import Handler.Admin
 import Handler.Comment
 import Handler.Common
 import Handler.Competitor
+import Handler.Event
+import Handler.Home
+--import Handler.Search
 --------------------------------------------------------------------------------
 
 -- This line actually creates our YesodDispatch instance. It is the second half
@@ -60,6 +56,14 @@ makeFoundation appSettings = do
         (appStaticDir appSettings)
 
     getDatabase <- openLocalState initDatabase
+
+    json <- readFile "./data/data.json"
+    let mpersons = fmap fromPerson <$> eitherDecode' json :: Either String [Competitor]
+    case mpersons of
+      Left err      -> error $ pack err
+      Right persons -> do
+        groupUpdates getDatabase (map InsertCompetitor   persons)
+        groupUpdates getDatabase (map InsertEventDetails (concatMap extractEventDetails persons))
 
     -- Return the foundation
     return App {..}

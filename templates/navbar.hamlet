@@ -17,10 +17,12 @@
 
       <ul .nav .navbar-nav>
         <li>
-          <a href="@{EventListR}">
+          <a href="@{EventListR}?start=A">
             Events
 
+<!--
       <ul .nav .navbar-nav .navbar-right>
         <li>
           <a href="@{AdminR}">
             Admin
+-->

@@ -1,6 +1,5 @@
 module Model.External
   where
-
 --------------------------------------------------------------------------------
 import           ClassyPrelude
 import           Import.DeriveJSON
