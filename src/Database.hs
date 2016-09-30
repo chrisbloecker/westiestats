@@ -59,6 +59,7 @@ initDatabase = Database { competitors = empty
 getCompetitor :: WscId -> Query Database (Maybe Competitor)
 getCompetitor wscid = fmap (getOne . getEQ wscid . competitors) ask
 
+
 insertCompetitor :: Competitor -> Update Database ()
 insertCompetitor competitor@Competitor{..} = do
   db@Database{..} <- get
@@ -74,6 +75,7 @@ getMostPoints role division = do
 getEventDetails :: EventId -> Query Database (Maybe EventDetails)
 getEventDetails eventId = fmap (getOne . getEQ eventId . events) ask
 
+
 insertEventDetails :: EventDetails -> Update Database ()
 insertEventDetails eventDetails@EventDetails{..} = do
   db@Database{..} <- get
@@ -81,6 +83,7 @@ insertEventDetails eventDetails@EventDetails{..} = do
   case moldDetails of
     Nothing         -> put $ db { events = updateIx eventDetailsId  eventDetails                                   events }
     Just oldDetails -> put $ db { events = updateIx eventDetailsId (eventDetails `combineEventDetails` oldDetails) events }
+
 
 getEvents :: Query Database [EventDetails]
 getEvents = fmap (Ix.toList . events) ask
