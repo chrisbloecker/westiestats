@@ -114,7 +114,7 @@ executable          downloader
         Buildable: False
 
     main-is:            downloader.hs
-    hs-source-dirs:     downloader
+    hs-source-dirs:     .
     build-depends:      base
                       , aeson
                       , parallel-io
