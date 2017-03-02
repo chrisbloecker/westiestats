@@ -12,7 +12,7 @@
           <a href="@{EventR eventId year}">#{year}
 
 <section .page-header>
-  $forall division <- M.keys thisYear
+  $forall division <- divisions
     <div .row>
       <h3 .text-center>#{division}
       <div .col-md-6 .col-lg-6>

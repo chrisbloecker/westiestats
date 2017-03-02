@@ -1,9 +1,7 @@
 module Handler.Home
   where
 --------------------------------------------------------------------------------
-import Database
 import Import
-import Model
 --------------------------------------------------------------------------------
 
 getHomeR :: Handler Html

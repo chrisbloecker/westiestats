@@ -70,6 +70,12 @@ data Division = Newcomer
               | Teacher
   deriving (Eq, Ord, Enum, Show)
 
+preferredDivisionOrder :: [Division]
+preferredDivisionOrder = [ Invitational, Champions, Allstars, Advanced, Intermediate, Novice, Newcomer
+                         , Masters, Sophisticated
+                         , Professional, Teacher, Juniors
+                         ]
+
 data Placement = One
                | Two
                | Three

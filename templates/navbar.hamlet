@@ -9,20 +9,14 @@
 
     <div .collapse .navbar-collapse id="the-navbar">
       <form .navbar-form .navbar-left role="search" action="@{CompetitorR}">
-        <div .form-group>
+        <div .input-group>
           <input .form-control type="number" name="wscid" placeholder="wscid">
-        <button type="submit" .btn .btn-default>
-          <span .glyphicon .glyphicon-search>
-          Search
+          <span .input-group-btn>
+            <button type="submit" .btn .btn-default>
+              <span .glyphicon .glyphicon-search>
+              Search
 
       <ul .nav .navbar-nav>
         <li>
           <a href="@{EventListR}?start=A">
             Events
-
-<!--
-      <ul .nav .navbar-nav .navbar-right>
-        <li>
-          <a href="@{AdminR}">
-            Admin
--->

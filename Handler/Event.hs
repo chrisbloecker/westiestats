@@ -19,7 +19,7 @@ getEventR eventId eventYear = do
     Just EventDetails{..} -> do
       let thisYear  = fromJust $ M.lookup eventYear eventDetailsResults
           years     = reverse . sort . M.keys $ eventDetailsResults
-          divisions = M.keys thisYear
+          divisions = filter (`elem` M.keys thisYear) preferredDivisionOrder
       defaultLayout $(widgetFile "event")
 
   where
