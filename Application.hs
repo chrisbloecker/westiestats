@@ -28,15 +28,14 @@ import Import.DeriveJSON
 import Model                                (Competitor, fromPerson)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
---import Handler.Admin
 import Handler.Comment
 import Handler.Common
 import Handler.Competitor
 import Handler.Event
 import Handler.Home
---import Handler.Search
 --------------------------------------------------------------------------------
-import qualified Data.List as L (maximum)
+import qualified Data.List            as L  (maximum)
+import qualified Data.ByteString.Lazy as BS (readFile)
 --------------------------------------------------------------------------------
 
 -- This line actually creates our YesodDispatch instance. It is the second half
@@ -60,7 +59,7 @@ makeFoundation appSettings = do
 
     getDatabase <- openLocalState initDatabase
 
-    json <- readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
+    json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
     let mpersons = fmap fromPerson <$> eitherDecode' json :: Either String [Competitor]
     case mpersons of
       Left err      -> error $ pack err

@@ -1,16 +1,16 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Main
   where
 --------------------------------------------------------------------------------
 import           Control.Concurrent.ParallelIO
-import           Data.Time.Clock               (getCurrentTime, utctDay)
+import           ClassyPrelude
 import           Competitor                    (loadDancer)
 import           Data.Aeson                    (encode)
 import           Data.Either                   (rights)
 import           Model                         (WscId (..))
 import           Options.Applicative
-import           System.IO.Unsafe              (unsafePerformIO)
 --------------------------------------------------------------------------------
 import qualified Data.ByteString.Lazy as BS    (writeFile)
 --------------------------------------------------------------------------------
