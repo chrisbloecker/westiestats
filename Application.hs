@@ -28,6 +28,7 @@ import Import.DeriveJSON
 import Model                                (Competitor, fromPerson)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
+import Handler.AutoComplete
 import Handler.Comment
 import Handler.Common
 import Handler.Competitor
@@ -41,7 +42,7 @@ import qualified Data.ByteString.Lazy as BS (readFile)
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
 -- comments there for more details.
-mkYesodDispatch "App" resourcesApp
+mkYesodDispatch "App" resourcesApps
 
 -- | This function allocates resources (such as a database connection pool),
 -- performs initialization and returns a foundation datatype value. This is also
