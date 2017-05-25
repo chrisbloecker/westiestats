@@ -25,10 +25,11 @@ import Database
 import Data.Acid
 import Data.Acid.Advanced
 import Import.DeriveJSON
-import Model                                (Competitor, fromPerson)
+import Model                                (Competitor (..), fromPerson)
 import Model.External                       (parsePerson)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
+import Handler.AutoComplete
 import Handler.Comment
 import Handler.Common
 import Handler.Competitor
@@ -61,14 +62,17 @@ makeFoundation appSettings = do
 
     getDatabase <- openLocalState initDatabase
 
+    putStrLn "[DEBUG] Loading database file"
     json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
     let persons = Stream.parseLazyByteString (Stream.arrayOf parsePerson) json
-    forM persons $ \person -> do
+    forM_ persons $ \person -> do
       let competitor = fromPerson person
-      update' getDatabase (InsertCompetitor competitor)
-      let events = extractEventDetails competitor
-      forM events $ \event ->
-        update' getDatabase (InsertEventDetails event)
+      groupUpdates getDatabase [InsertCompetitor competitor]
+      groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
+
+      --update' getDatabase (InsertCompetitor competitor)
+      --let events = extractEventDetails competitor
+      --forM events $ \event -> update' getDatabase (InsertEventDetails event)
     {-
     let mpersons = fmap fromPerson <$> eitherDecode' json :: Either String [Competitor]
     case mpersons of

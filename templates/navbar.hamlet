@@ -10,7 +10,7 @@
     <div .collapse .navbar-collapse id="the-navbar">
       <form .navbar-form .navbar-left role="search" action="@{CompetitorR}">
         <div .input-group>
-          <input .form-control type="number" name="wscid" placeholder="wscid">
+          <input .form-control type="text" name="wscid" id="search-input" onkeyup="autocompleteSearch()">
           <span .input-group-btn>
             <button type="submit" .btn .btn-default>
               <span .glyphicon .glyphicon-search>

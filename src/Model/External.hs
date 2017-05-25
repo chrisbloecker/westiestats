@@ -2,7 +2,7 @@ module Model.External
   where
 --------------------------------------------------------------------------------
 import ClassyPrelude
-import Data.JsonStream.Parser ((.:), (.:?), integer, string)
+import Data.JsonStream.Parser ((.:), (.:?), integer, string, arrayOf)
 import Import.DeriveJSON
 import Text.Blaze             (ToMarkup (..))
 --------------------------------------------------------------------------------
@@ -39,8 +39,8 @@ data Placements = Placements { westCoastSwing :: Maybe [Division]
   deriving (Show)
 
 parsePlacements :: Stream.Parser Placements
-parsePlacements = Placements <$> getLabel "westCoastSwing" .:? many parseDivision
-                             <*> getLabel "lindy"          .:? many parseDivision
+parsePlacements = Placements <$> optional (many (getLabel "westCoastSwing" .: arrayOf parseDivision)) -- ToDo: can we write this in terms of .:? ?
+                             <*> optional (many (getLabel "lindy"          .: arrayOf parseDivision))
 
 data Division = Division { divisionDetails      :: Details
                          , divisionTotalPoints  :: Integer
@@ -49,9 +49,9 @@ data Division = Division { divisionDetails      :: Details
   deriving (Show)
 
 parseDivision :: Stream.Parser Division
-parseDivision = Division <$> getLabel "divisionDetails"      .: parseDetails
-                         <*> getLabel "divisionTotalPoints"  .: parseInteger
-                         <*> getLabel "divisionCompetitions" .: many parseCompetition
+parseDivision = Division <$>       getLabel "divisionDetails"      .: parseDetails
+                         <*>       getLabel "divisionTotalPoints"  .: parseInteger
+                         <*> many (getLabel "divisionCompetitions" .: arrayOf parseCompetition)
 
 data Details = Details { detailsId           :: Integer
                        , detailsName         :: Text
