@@ -19,6 +19,7 @@ library
                      Database
                      Foundation
 --                     Handler.Admin
+                     Handler.AutoComplete
                      Handler.Comment
                      Handler.Common
                      Handler.Competitor
@@ -97,6 +98,7 @@ library
                  , mtl
                  , path-pieces
                  , conduit-extra
+                 , json-stream
 
 executable         westiestats
     if flag(library-only)

@@ -3,6 +3,7 @@ module Import.DeriveJSON
   , deriveJSON, jsonOptions
   , Text
   , encodeUtf8
+  , fieldLabel
   ) where
 
 -------------------------------------------------------------------------------

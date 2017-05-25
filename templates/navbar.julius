@@ -1,0 +1,11 @@
+function autocompleteSearch()
+{
+  $('#search-input').autocomplete(
+  {
+    serviceUrl: '@{AutoCompleteR}',
+    onSelect: function (suggestion)
+    {
+      alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+    }
+  });
+}

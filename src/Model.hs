@@ -1,12 +1,11 @@
 module Model
   where
-
 --------------------------------------------------------------------------------
-import           ClassyPrelude
-import           Data.List           ((!!))
-import           Text.Blaze          (ToMarkup (..))
-import           Text.Read           (read)
-import           Web.PathPieces      (PathPiece (..))
+import ClassyPrelude
+import Data.List           ((!!))
+import Text.Blaze          (ToMarkup (..))
+import Text.Read           (read)
+import Web.PathPieces      (PathPiece (..))
 --------------------------------------------------------------------------------
 import qualified Data.Set       as S (union)
 import qualified Data.Map       as M (unionWith)
@@ -18,26 +17,20 @@ data Competitor = Competitor { competitorId      :: CompetitorId
                              , competitorName    :: Text
                              , competitorResults :: [Result]
                              }
-  deriving (Eq, Ord)
-
-data Result_v0 = Result_v0 { resultDivision_v0     :: Division
-                           , resultPoints_v0       :: Integer
-                           , resultCompetitions_v0 :: [Competition]
-                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 data Result = Result { resultDivision     :: Division
                      , resultPoints       :: ResultPoints
                      , resultCompetitions :: [Competition]
                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 data Competition = Competition { competitionEvent     :: Event
                                , competitionRole      :: Role
                                , competitionPlacement :: Placement
                                , competitionPoints    :: Integer
                                }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 data Event = Event { eventId       :: EventId
                    , eventName     :: Text
@@ -45,7 +38,7 @@ data Event = Event { eventId       :: EventId
                    , eventMonth    :: Text
                    , eventYear     :: EventYear
                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 data EventDetails = EventDetails { eventDetailsId       :: EventId
                                  , eventDetailsName     :: Text
@@ -88,7 +81,7 @@ data Role = Leader
           | Follower
   deriving (Eq, Ord, Show)
 
-newtype CompetitorId = CompetitorId { unCompetitorId :: Integer } deriving (Eq, Ord)
+newtype CompetitorId = CompetitorId { unCompetitorId :: Integer } deriving (Eq, Ord, Show)
 newtype WscId        = WscId        { unWscId        :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype ResultPoints = ResultPoints { unResultPoints :: Integer } deriving (Eq, Ord, Show)
 newtype EventId      = EventId      { unEventId      :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
