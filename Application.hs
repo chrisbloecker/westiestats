@@ -26,6 +26,7 @@ import Data.Acid
 import Data.Acid.Advanced
 import Import.DeriveJSON
 import Model                                (Competitor, fromPerson)
+import Model.External                       (parsePerson)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.Comment
@@ -34,8 +35,9 @@ import Handler.Competitor
 import Handler.Event
 import Handler.Home
 --------------------------------------------------------------------------------
-import qualified Data.List            as L  (maximum)
-import qualified Data.ByteString.Lazy as BS (readFile)
+import qualified Data.ByteString.Lazy   as BS     (readFile)
+import qualified Data.List              as L      (maximum)
+import qualified Data.JsonStream.Parser as Stream (arrayOf, parseLazyByteString)
 --------------------------------------------------------------------------------
 
 -- This line actually creates our YesodDispatch instance. It is the second half
@@ -60,12 +62,21 @@ makeFoundation appSettings = do
     getDatabase <- openLocalState initDatabase
 
     json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
+    let persons = Stream.parseLazyByteString (Stream.arrayOf parsePerson) json
+    forM persons $ \person -> do
+      let competitor = fromPerson person
+      update' getDatabase (InsertCompetitor competitor)
+      let events = extractEventDetails competitor
+      forM events $ \event ->
+        update' getDatabase (InsertEventDetails event)
+    {-
     let mpersons = fmap fromPerson <$> eitherDecode' json :: Either String [Competitor]
     case mpersons of
       Left err      -> error $ pack err
       Right persons -> do
         groupUpdates getDatabase (map InsertCompetitor   persons)
         groupUpdates getDatabase (map InsertEventDetails (concatMap extractEventDetails persons))
+    -}
 
     -- Return the foundation
     return App {..}

@@ -97,6 +97,7 @@ library
                  , mtl
                  , path-pieces
                  , conduit-extra
+                 , json-stream
 
 executable         westiestats
     if flag(library-only)
