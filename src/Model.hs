@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-unbox-strict-fields #-}
+--------------------------------------------------------------------------------
 module Model
   where
 --------------------------------------------------------------------------------
@@ -12,38 +14,38 @@ import qualified Data.Map       as M (unionWith)
 import qualified Model.External as E
 --------------------------------------------------------------------------------
 
-data Competitor = Competitor { competitorId      :: CompetitorId
-                             , competitorWscId   :: WscId
-                             , competitorName    :: Text
-                             , competitorResults :: [Result]
+data Competitor = Competitor { competitorId      :: !CompetitorId
+                             , competitorWscId   :: !WscId
+                             , competitorName    :: !Text
+                             , competitorResults :: ![Result]
                              }
   deriving (Eq, Ord, Show)
 
-data Result = Result { resultDivision     :: Division
-                     , resultPoints       :: ResultPoints
-                     , resultCompetitions :: [Competition]
+data Result = Result { resultDivision     :: !Division
+                     , resultPoints       :: !ResultPoints
+                     , resultCompetitions :: ![Competition]
                      }
   deriving (Eq, Ord, Show)
 
-data Competition = Competition { competitionEvent     :: Event
-                               , competitionRole      :: Role
-                               , competitionPlacement :: Placement
-                               , competitionPoints    :: Integer
+data Competition = Competition { competitionEvent     :: !Event
+                               , competitionRole      :: !Role
+                               , competitionPlacement :: !Placement
+                               , competitionPoints    :: !Integer
                                }
   deriving (Eq, Ord, Show)
 
-data Event = Event { eventId       :: EventId
-                   , eventName     :: Text
-                   , eventLocation :: Text
-                   , eventMonth    :: Text
-                   , eventYear     :: EventYear
+data Event = Event { eventId       :: !EventId
+                   , eventName     :: !Text
+                   , eventLocation :: !Text
+                   , eventMonth    :: !Text
+                   , eventYear     :: !EventYear
                    }
   deriving (Eq, Ord, Show)
 
-data EventDetails = EventDetails { eventDetailsId       :: EventId
-                                 , eventDetailsName     :: Text
-                                 , eventDetailsLocation :: Text
-                                 , eventDetailsResults  :: Map EventYear (Map Division (Set ResultEntry))
+data EventDetails = EventDetails { eventDetailsId       :: !EventId
+                                 , eventDetailsName     :: !Text
+                                 , eventDetailsLocation :: !Text
+                                 , eventDetailsResults  :: !(Map EventYear (Map Division (Set ResultEntry)))
                                  }
   deriving (Eq, Ord, Show)
 

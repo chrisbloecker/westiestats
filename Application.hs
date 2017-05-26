@@ -24,9 +24,8 @@ import Competitor                           (extractEventDetails)
 import Database
 import Data.Acid
 import Data.Acid.Advanced
-import Import.DeriveJSON
-import Model                                (Competitor (..), fromPerson)
-import Model.External                       (parsePerson)
+import Model                                (fromPerson)
+import Model.External                       (person)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.AutoComplete
@@ -44,7 +43,7 @@ import qualified Data.JsonStream.Parser as Stream (arrayOf, parseLazyByteString)
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
 -- comments there for more details.
-mkYesodDispatch "App" resourcesApps
+mkYesodDispatch "App" resourcesApp
 
 -- | This function allocates resources (such as a database connection pool),
 -- performs initialization and returns a foundation datatype value. This is also
@@ -64,7 +63,7 @@ makeFoundation appSettings = do
 
     putStrLn "[DEBUG] Loading database file"
     json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
-    let persons = Stream.parseLazyByteString (Stream.arrayOf parsePerson) json
+    let persons = Stream.parseLazyByteString (Stream.arrayOf person) json
     forM_ persons $ \person -> do
       let competitor = fromPerson person
       groupUpdates getDatabase [InsertCompetitor competitor]

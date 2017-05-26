@@ -15,8 +15,8 @@ import           Model
 import qualified Data.IxSet          as Ix  (toList)
 --------------------------------------------------------------------------------
 
-data Database = Database { competitors :: IxSet Competitor
-                         , events      :: IxSet EventDetails
+data Database = Database { competitors :: !(IxSet Competitor)
+                         , events      :: !(IxSet EventDetails)
                          }
 
 instance Indexable Competitor where
