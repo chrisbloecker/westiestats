@@ -14,10 +14,11 @@ import qualified Data.Map       as M (unionWith)
 import qualified Model.External as E
 --------------------------------------------------------------------------------
 
-data Competitor = Competitor { competitorId      :: !CompetitorId
-                             , competitorWscId   :: !WscId
-                             , competitorName    :: !Text
-                             , competitorResults :: ![Result]
+data Competitor = Competitor { competitorId        :: !CompetitorId
+                             , competitorWscId     :: !WscId
+                             , competitorFirstName :: !Text
+                             , competitorLastName  :: !Text
+                             , competitorResults   :: ![Result]
                              }
   deriving (Eq, Ord, Show)
 
@@ -88,6 +89,7 @@ newtype WscId        = WscId        { unWscId        :: Integer } deriving (Eq, 
 newtype ResultPoints = ResultPoints { unResultPoints :: Integer } deriving (Eq, Ord, Show)
 newtype EventId      = EventId      { unEventId      :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype EventYear    = EventYear    { unEventYear    :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
+newtype Prefix       = Prefix       { unPrefix       :: Text    } deriving (Eq, Ord, Show)
 --------------------------------------------------------------------------------
 
 instance ToMarkup Division where
@@ -158,10 +160,11 @@ toRole r          = error ("Unknown role" ++ unpack r)
 
 fromPerson :: E.Person -> Competitor
 fromPerson E.Person{..} =
-  Competitor { competitorId      = CompetitorId $ E.dancerId    personDancer
-             , competitorWscId   = WscId        $ E.dancerWscid personDancer
-             , competitorName    = unwords [E.dancerFirstName personDancer, E.dancerLastName personDancer]
-             , competitorResults = fromPlacements personPlacements
+  Competitor { competitorId        = CompetitorId $ E.dancerId    personDancer
+             , competitorWscId     = WscId        $ E.dancerWscid personDancer
+             , competitorFirstName = E.dancerFirstName personDancer
+             , competitorLastName  = E.dancerLastName personDancer
+             , competitorResults   = fromPlacements personPlacements
              }
 
 fromPlacements :: Maybe E.Placements -> [Result]

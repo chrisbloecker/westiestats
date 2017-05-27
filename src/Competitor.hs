@@ -28,7 +28,7 @@ loadDancer (WscId wscid) = do
 
 loadCompetitor :: WscId -> IO (Either String (Competitor, [EventDetails]))
 loadCompetitor wscid = do
-  mp <- (loadDancer wscid)
+  mp <- loadDancer wscid
   return $ fmap ((id &&& extractEventDetails) . fromPerson) mp
 
 extractEventDetails :: Competitor -> [EventDetails]
@@ -38,7 +38,7 @@ extractEventDetails Competitor{..} =
                                               , eventDetailsName     = eventName     competitionEvent
                                               , eventDetailsLocation = eventLocation competitionEvent
                                               , eventDetailsResults  = M.singleton (eventYear competitionEvent)
-                                                                                   (M.singleton resultDivision (S.singleton (competitorWscId, competitorName, competitionRole, competitionPlacement)))
+                                                                                   (M.singleton resultDivision (S.singleton (competitorWscId, unwords [competitorFirstName, competitorLastName], competitionRole, competitionPlacement)))
                                               }
             ) resultCompetitions
             ) competitorResults

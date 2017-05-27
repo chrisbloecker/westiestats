@@ -11,6 +11,13 @@ import Text.Blaze             (ToMarkup (..))
 import qualified Data.JsonStream.Parser as Stream
 --------------------------------------------------------------------------------
 
+data Snapshot = Snapshot { snapshotDate      :: !Day
+                         , snapshotFromWscId :: !Integer
+                         , snapshotToWscId   :: !Integer
+                         , snapshotPersons   :: ![Person]
+                         }
+  deriving (Show)
+
 data Person = Person { personType       :: !Text
                      , personDancer     :: !Dancer
                      , personPlacements :: !(Maybe Placements)
@@ -60,6 +67,12 @@ data Event = Event { eventId       :: !Integer
 --------------------------------------------------------------------------------
 -- Parsers for JsonStream
 
+snapshot :: Stream.Parser Snapshot
+snapshot = Snapshot <$>       getLabel "snapshotDate"      .: undefined
+                    <*>       getLabel "snapshotFromWscId" .: parseInteger
+                    <*>       getLabel "snapshottoWscId"   .: parseInteger
+                    <*> many (getLabel "snapshotPersons"   .: arrayOf person)
+
 person :: Stream.Parser Person
 person = Person <$> getLabel "personType"       .:  string
                 <*> getLabel "personDancer"     .:  dancer
@@ -97,7 +110,12 @@ event = Event <$> getLabel "eventId"       .:  parseInteger
               <*> getLabel "eventLocation" .:  string
               <*> getLabel "eventUrl"      .:? string
               <*> getLabel "eventDate"     .:  string
-
+{-
+day :: Stream.Parser Day
+day = Day <$> integer
+          <*> integer
+          <*> integer
+-}
 parseInteger :: Stream.Parser Integer
 parseInteger = (fromIntegral :: Int -> Integer) <$> integer
 
@@ -105,6 +123,9 @@ getLabel :: Text -> Text
 getLabel = pack . fieldLabel . unpack
 
 --------------------------------------------------------------------------------
+
+instance ToMarkup Snapshot where
+  toMarkup = toMarkup . show
 
 instance ToMarkup Person where
   toMarkup = toMarkup . show
@@ -127,6 +148,7 @@ instance ToMarkup Competition where
 instance ToMarkup Event where
   toMarkup = toMarkup . show
 
+$(deriveJSON jsonOptions ''Snapshot)
 $(deriveJSON jsonOptions ''Person)
 $(deriveJSON jsonOptions ''Dancer)
 $(deriveJSON jsonOptions ''Placements)

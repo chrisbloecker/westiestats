@@ -9,7 +9,10 @@ import           ClassyPrelude
 import           Competitor                    (loadDancer)
 import           Data.Aeson                    (encode)
 import           Data.Either                   (rights)
+import           Data.Time.Calendar            (toGregorian)
+import           Data.Time.Clock               (getCurrentTime, utctDay)
 import           Model                         (WscId (..))
+import           Model.External                (Snapshot (..))
 import           Options.Applicative
 --------------------------------------------------------------------------------
 import qualified Data.ByteString.Lazy as BS    (writeFile)
@@ -39,8 +42,11 @@ options = Options
 
 run :: Options -> IO ()
 run Options{..} = do
-  dancers <- encode . rights <$> parallel [loadDancer (WscId wscid) | wscid <- [from .. to]]
-  BS.writeFile out dancers
+  let snapshotFromWscId = from
+      snapshotToWscId   = to
+  snapshotDate    <- (\(yyyy, mm, dd) -> fromGregorian yyyy mm dd) . toGregorian . utctDay <$> getCurrentTime
+  snapshotPersons <- rights <$> parallel [loadDancer (WscId wscid) | wscid <- [from .. to]]
+  BS.writeFile out (encode Snapshot{..})
 
 main :: IO ()
 main = execParser opts >>= run

@@ -1,8 +1,8 @@
 <section.page-header>
   <div>
     $maybe competitor <- mcompetitor
-      $with Competitor competitorId wscid name results <- competitor
-        <h2>#{wscid} - #{name}
+      $with Competitor competitorId wscid firstName lastName results <- competitor
+        <h2>#{wscid} - #{firstName} #{lastName}
           $forall Result division points competitions <- results
             <h4>#{division} - #{points} Points
             <table .table .table-striped .table-hover>

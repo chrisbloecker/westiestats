@@ -24,8 +24,9 @@ import Competitor                           (extractEventDetails)
 import Database
 import Data.Acid
 import Data.Acid.Advanced
+import Import.DeriveJSON                    (eitherDecode')
 import Model                                (fromPerson)
-import Model.External                       (person)
+import Model.External                       (Person, person)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.AutoComplete
@@ -69,16 +70,14 @@ makeFoundation appSettings = do
       groupUpdates getDatabase [InsertCompetitor competitor]
       groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
 
-      --update' getDatabase (InsertCompetitor competitor)
-      --let events = extractEventDetails competitor
-      --forM events $ \event -> update' getDatabase (InsertEventDetails event)
     {-
-    let mpersons = fmap fromPerson <$> eitherDecode' json :: Either String [Competitor]
+    let mpersons = eitherDecode' json :: Either String [Person]
     case mpersons of
-      Left err      -> error $ pack err
-      Right persons -> do
-        groupUpdates getDatabase (map InsertCompetitor   persons)
-        groupUpdates getDatabase (map InsertEventDetails (concatMap extractEventDetails persons))
+      Left err -> error $ pack err
+      Right persons -> forM_ persons $ \person -> do
+        let competitor = fromPerson person
+        groupUpdates getDatabase [InsertCompetitor competitor]
+        groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
     -}
 
     -- Return the foundation

@@ -8,8 +8,10 @@ import           Competitor                 (getPointsAsIn)
 import           Control.Monad.State        (get, put)
 import           Data.Acid                  (Update, Query, makeAcidic)
 import           Data.IxSet          hiding ((&&&))
+import           Data.List                  (nub)
 import           Data.Maybe                 (fromJust)
 import           Data.SafeCopy              (deriveSafeCopy, base)
+import           Data.Text                  (inits)
 import           Model
 --------------------------------------------------------------------------------
 import qualified Data.IxSet          as Ix  (toList)
@@ -25,6 +27,7 @@ instance Indexable Competitor where
                 , ixFun $ \Competitor{..} -> concatMap (map (eventId   . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> concatMap (map (eventYear . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> map resultDivision competitorResults
+                , ixFun $ \Competitor{..} -> [ Prefix prefix | prefix <- nub (inits competitorFirstName ++ inits competitorLastName), length prefix >= 3 ]
                 ]
 
 instance Indexable EventDetails where
@@ -47,6 +50,7 @@ deriveSafeCopy 0 'base ''WscId
 deriveSafeCopy 0 'base ''ResultPoints
 deriveSafeCopy 0 'base ''EventId
 deriveSafeCopy 0 'base ''EventYear
+deriveSafeCopy 0 'base ''Prefix
 --------------------------------------------------------------------------------
 
 initDatabase :: Database
