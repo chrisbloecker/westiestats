@@ -118,6 +118,9 @@ instance ToMarkup ResultPoints where
 instance ToMarkup EventYear where
   toMarkup = toMarkup . unEventYear
 
+instance ToMarkup Day where
+  toMarkup = toMarkup . show
+
 --------------------------------------------------------------------------------
 
 combineEventDetails :: EventDetails -> EventDetails -> EventDetails

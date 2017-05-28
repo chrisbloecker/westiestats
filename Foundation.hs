@@ -78,6 +78,8 @@ instance Yesod App where
         master <- getYesod
         mmsg <- getMessage
 
+        snapshotDate <- acidQuery GetSnapshotDate
+
         navbar <- widgetToPageContent $(widgetFile "navbar")
         footer <- widgetToPageContent $(widgetFile "footer")
         -- We break up the default layout into two components:

@@ -26,7 +26,7 @@ import Data.Acid
 import Data.Acid.Advanced
 import Import.DeriveJSON                    (eitherDecode')
 import Model                                (fromPerson)
-import Model.External                       (Person, person)
+import Model.External                       (Snapshot (..))
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.AutoComplete
@@ -64,21 +64,29 @@ makeFoundation appSettings = do
 
     putStrLn "[DEBUG] Loading database file"
     json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
+    {-
     let persons = Stream.parseLazyByteString (Stream.arrayOf person) json
     forM_ persons $ \person -> do
       let competitor = fromPerson person
       groupUpdates getDatabase [InsertCompetitor competitor]
       groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
-
-    {-
-    let mpersons = eitherDecode' json :: Either String [Person]
-    case mpersons of
-      Left err -> error $ pack err
-      Right persons -> forM_ persons $ \person -> do
-        let competitor = fromPerson person
-        groupUpdates getDatabase [InsertCompetitor competitor]
-        groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
     -}
+
+    let msnapshot = eitherDecode' json :: Either String Snapshot
+    case msnapshot of
+      Left err -> error $ pack err
+      Right Snapshot{..} -> do
+        oldDate <- query getDatabase GetSnapshotDate
+        -- We only build up the database if the snapshot is newer
+        when (oldDate < snapshotDate) $ do
+          putStrLn $ unwords ["[INFO] The old snapshot was from", pack . show $ oldDate, "but there is a new version from", pack . show $ snapshotDate]
+          groupUpdates getDatabase [SetSnapshotDate snapshotDate]
+          forM_ snapshotPersons $ \person -> do
+            let competitor = fromPerson person
+            groupUpdates getDatabase [InsertCompetitor competitor]
+            groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
+          createCheckpoint getDatabase
+          createArchive getDatabase
 
     -- Return the foundation
     return App {..}

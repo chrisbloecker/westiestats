@@ -1,6 +1,9 @@
-<nav .navbar .navbar-default .navbar-fixed-bottom role="navigation" style="min-height:25px">
+<nav .navbar .navbar-default .navbar-fixed-bottom role="navigation">
   <footer .container>
     <div .text-center>
+      <span .label .label-default>
+        Snapshot from #{snapshotDate}
+      \ #
       <span .label .label-success>
         #{appCopyright $ appSettings master}
       \ #

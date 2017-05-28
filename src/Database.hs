@@ -17,8 +17,9 @@ import           Model
 import qualified Data.IxSet          as Ix  (toList)
 --------------------------------------------------------------------------------
 
-data Database = Database { competitors :: !(IxSet Competitor)
-                         , events      :: !(IxSet EventDetails)
+data Database = Database { snapshotDate :: !Day
+                         , competitors  :: !(IxSet Competitor)
+                         , events       :: !(IxSet EventDetails)
                          }
 
 instance Indexable Competitor where
@@ -54,11 +55,22 @@ deriveSafeCopy 0 'base ''Prefix
 --------------------------------------------------------------------------------
 
 initDatabase :: Database
-initDatabase = Database { competitors = empty
-                        , events      = empty
+initDatabase = Database { snapshotDate = fromGregorian 1970 1 1
+                        , competitors  = empty
+                        , events       = empty
                         }
 
 --------------------------------------------------------------------------------
+
+setSnapshotDate :: Day -> Update Database ()
+setSnapshotDate date = do
+  db@Database{..} <- get
+  put $ db { snapshotDate = date }
+
+
+getSnapshotDate :: Query Database Day
+getSnapshotDate = fmap snapshotDate ask
+
 
 getCompetitor :: WscId -> Query Database (Maybe Competitor)
 getCompetitor wscid = fmap (getOne . getEQ wscid . competitors) ask
@@ -94,7 +106,10 @@ getEvents = fmap (Ix.toList . events) ask
 
 --------------------------------------------------------------------------------
 
-makeAcidic ''Database [ 'getCompetitor
+makeAcidic ''Database [ 'setSnapshotDate
+                      , 'getSnapshotDate
+
+                      , 'getCompetitor
                       , 'insertCompetitor
 
                       , 'getMostPoints

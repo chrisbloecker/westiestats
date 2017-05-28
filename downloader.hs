@@ -9,7 +9,6 @@ import           ClassyPrelude
 import           Competitor                    (loadDancer)
 import           Data.Aeson                    (encode)
 import           Data.Either                   (rights)
-import           Data.Time.Calendar            (toGregorian)
 import           Data.Time.Clock               (getCurrentTime, utctDay)
 import           Model                         (WscId (..))
 import           Model.External                (Snapshot (..))
@@ -44,7 +43,7 @@ run :: Options -> IO ()
 run Options{..} = do
   let snapshotFromWscId = from
       snapshotToWscId   = to
-  snapshotDate    <- (\(yyyy, mm, dd) -> fromGregorian yyyy mm dd) . toGregorian . utctDay <$> getCurrentTime
+  snapshotDate    <- utctDay <$> getCurrentTime
   snapshotPersons <- rights <$> parallel [loadDancer (WscId wscid) | wscid <- [from .. to]]
   BS.writeFile out (encode Snapshot{..})
 
