@@ -63,13 +63,19 @@ makeFoundation appSettings = do
 
     getDatabase <- openLocalState initDatabase
 
-    putStrLn "[DEBUG] Loading database file"
-    json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
+    snapshotFile <- ("./data/" ++) . L.maximum <$> getDirectoryContents "./data/"
+    putStrLn $ "[DEBUG] Loading snapshot file from " ++ pack snapshotFile
+    json <- BS.readFile snapshotFile
+
     let snapshotDate = L.head . Stream.parseLazyByteString ("snapshotDate" .: day) $ json
-    oldDate <- query getDatabase GetSnapshotDate
+    putStrLn $ "[DEBUG] Snapshot date of snapshot file is " ++ pack (show snapshotDate)
+
+    databaseDate <- query getDatabase GetSnapshotDate
+    putStrLn $ "[DEBUG] Snapshot date of database is " ++ pack (show databaseDate)
+
     -- We only build up the database if the snapshot is newer
-    when (oldDate < snapshotDate) $ do
-      putStrLn $ unwords ["[INFO] The old snapshot was from", pack . show $ oldDate, "but there is a new version from", pack . show $ snapshotDate]
+    when (databaseDate < snapshotDate) $ do
+      putStrLn "[DEBUG] Importing snapshot file"
       let snapshotPersons = Stream.parseLazyByteString ("snapshotPersons" .: Stream.arrayOf person) json
       groupUpdates getDatabase [SetSnapshotDate snapshotDate]
       forM_ snapshotPersons $ \person -> do
@@ -78,6 +84,8 @@ makeFoundation appSettings = do
         groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
       createCheckpoint getDatabase
       createArchive getDatabase
+      putStrLn "[DEBUG] Import complete"
+
     putStrLn "[DEBUG] Database loaded"
 
     {-
