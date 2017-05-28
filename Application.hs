@@ -13,7 +13,7 @@ module Application
     ) where
 --------------------------------------------------------------------------------
 import Control.Monad.Logger                 (liftLoc)
-import Import
+import Import                        hiding ((.:))
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.Wai (Middleware)
 import Network.Wai.Handler.Warp             (Settings, defaultSettings, defaultShouldDisplayException, runSettings, setHost, setOnException, setPort, getPort)
@@ -24,9 +24,10 @@ import Competitor                           (extractEventDetails)
 import Database
 import Data.Acid
 import Data.Acid.Advanced
-import Import.DeriveJSON                    (eitherDecode')
+import Data.JsonStream.Parser               ((.:))
+--import Import.DeriveJSON                    (eitherDecode')
 import Model                                (fromPerson)
-import Model.External                       (Snapshot (..))
+import Model.External                       (day, person)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.AutoComplete
@@ -37,7 +38,7 @@ import Handler.Event
 import Handler.Home
 --------------------------------------------------------------------------------
 import qualified Data.ByteString.Lazy   as BS     (readFile)
-import qualified Data.List              as L      (maximum)
+import qualified Data.List              as L      (maximum, head)
 import qualified Data.JsonStream.Parser as Stream (arrayOf, parseLazyByteString)
 --------------------------------------------------------------------------------
 
@@ -64,14 +65,22 @@ makeFoundation appSettings = do
 
     putStrLn "[DEBUG] Loading database file"
     json <- BS.readFile . ("./data/" ++) . L.maximum =<< getDirectoryContents "./data/"
-    {-
-    let persons = Stream.parseLazyByteString (Stream.arrayOf person) json
-    forM_ persons $ \person -> do
-      let competitor = fromPerson person
-      groupUpdates getDatabase [InsertCompetitor competitor]
-      groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
-    -}
+    let snapshotDate = L.head . Stream.parseLazyByteString ("snapshotDate" .: day) $ json
+    oldDate <- query getDatabase GetSnapshotDate
+    -- We only build up the database if the snapshot is newer
+    when (oldDate < snapshotDate) $ do
+      putStrLn $ unwords ["[INFO] The old snapshot was from", pack . show $ oldDate, "but there is a new version from", pack . show $ snapshotDate]
+      let snapshotPersons = Stream.parseLazyByteString ("snapshotPersons" .: Stream.arrayOf person) json
+      groupUpdates getDatabase [SetSnapshotDate snapshotDate]
+      forM_ snapshotPersons $ \person -> do
+        let competitor = fromPerson person
+        groupUpdates getDatabase [InsertCompetitor competitor]
+        groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
+      createCheckpoint getDatabase
+      createArchive getDatabase
+    putStrLn "[DEBUG] Database loaded"
 
+    {-
     let msnapshot = eitherDecode' json :: Either String Snapshot
     case msnapshot of
       Left err -> error $ pack err
@@ -87,6 +96,7 @@ makeFoundation appSettings = do
             groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
           createCheckpoint getDatabase
           createArchive getDatabase
+    -}
 
     -- Return the foundation
     return App {..}

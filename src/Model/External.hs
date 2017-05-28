@@ -5,6 +5,7 @@ module Model.External
 --------------------------------------------------------------------------------
 import ClassyPrelude
 import Data.JsonStream.Parser ((.:), (.:?), integer, string, arrayOf)
+import Data.Maybe             (fromJust)
 import Import.DeriveJSON
 import Text.Blaze             (ToMarkup (..))
 --------------------------------------------------------------------------------
@@ -14,7 +15,7 @@ import qualified Data.JsonStream.Parser as Stream
 data Snapshot = Snapshot { snapshotDate      :: !Day
                          , snapshotFromWscId :: !Integer
                          , snapshotToWscId   :: !Integer
-                         , snapshotPersons   :: ![Person]
+                         , snapshotPersons   :: [Person]
                          }
   deriving (Show)
 
@@ -68,7 +69,7 @@ data Event = Event { eventId       :: !Integer
 -- Parsers for JsonStream
 
 snapshot :: Stream.Parser Snapshot
-snapshot = Snapshot <$>       getLabel "snapshotDate"      .: undefined
+snapshot = Snapshot <$>       getLabel "snapshotDate"      .: day
                     <*>       getLabel "snapshotFromWscId" .: parseInteger
                     <*>       getLabel "snapshottoWscId"   .: parseInteger
                     <*> many (getLabel "snapshotPersons"   .: arrayOf person)
@@ -110,12 +111,10 @@ event = Event <$> getLabel "eventId"       .:  parseInteger
               <*> getLabel "eventLocation" .:  string
               <*> getLabel "eventUrl"      .:? string
               <*> getLabel "eventDate"     .:  string
-{-
+
 day :: Stream.Parser Day
-day = Day <$> integer
-          <*> integer
-          <*> integer
--}
+day = fromJust . parseTimeM False defaultTimeLocale "%0Y-%m-%d" . unpack <$> string
+
 parseInteger :: Stream.Parser Integer
 parseInteger = (fromIntegral :: Int -> Integer) <$> integer
 
