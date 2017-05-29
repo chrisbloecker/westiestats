@@ -1,11 +1,16 @@
 function autocompleteSearch()
 {
-  $('#search-input').autocomplete(
+  if ($('#search-input').val().length >= 3)
   {
-    serviceUrl: '@{AutoCompleteR}',
-    onSelect: function (suggestion)
+    $('#search-input').devbridgeAutocomplete(
     {
-      alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-    }
-  });
+      serviceUrl: '@{AutoCompleteR}',
+      onSelect: function(suggestion)
+      {
+        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        $('#search-input').val(suggestion.value);
+        $('#search-input').attr("val", suggestion.data);
+      }
+    });
+  }
 }

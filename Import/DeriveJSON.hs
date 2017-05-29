@@ -44,6 +44,11 @@ fieldLabel "eventName"            = "name"
 fieldLabel "eventLocation"        = "location"
 fieldLabel "eventUrl"             = "url"
 fieldLabel "eventDate"            = "date"
+-- suggestions for auto complete
+fieldLabel "suggestions"          = "suggestions"
+-- auto complete
+fieldLabel "autoCompleteValue"    = "value"
+fieldLabel "autoCompleteData"     = "data"
 -- all the rest
 fieldLabel s = s
 

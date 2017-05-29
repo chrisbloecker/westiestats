@@ -7,4 +7,8 @@ import Model
 --------------------------------------------------------------------------------
 
 getAutoCompleteR :: Handler Value
-getAutoCompleteR = undefined --return . toJSON $ []
+getAutoCompleteR = do
+  mquery <- lookupGetParam "query"
+  case mquery of
+    Nothing    -> return . toJSON $ Suggestions []
+    Just query ->          toJSON . Suggestions . map fromCompetitor <$> acidQuery (SearchPrefix $ Prefix query)

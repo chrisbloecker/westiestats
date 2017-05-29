@@ -82,6 +82,10 @@ insertCompetitor competitor@Competitor{..} = do
   put $ db { competitors = updateIx competitorId competitor competitors }
 
 
+searchPrefix :: Prefix -> Query Database [Competitor]
+searchPrefix prefix = fmap (Data.IxSet.toList . getEQ prefix . competitors) ask
+
+
 getMostPoints :: Role -> Division -> Query Database [(Competitor, ResultPoints)]
 getMostPoints role division = do
   cs <- fmap (Ix.toList . getEQ division . competitors) ask
@@ -111,6 +115,7 @@ makeAcidic ''Database [ 'setSnapshotDate
 
                       , 'getCompetitor
                       , 'insertCompetitor
+                      , 'searchPrefix
 
                       , 'getMostPoints
 

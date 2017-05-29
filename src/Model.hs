@@ -5,6 +5,7 @@ module Model
 --------------------------------------------------------------------------------
 import ClassyPrelude
 import Data.List           ((!!))
+import Import.DeriveJSON
 import Text.Blaze          (ToMarkup (..))
 import Text.Read           (read)
 import Web.PathPieces      (PathPiece (..))
@@ -120,6 +121,21 @@ instance ToMarkup EventYear where
 
 instance ToMarkup Day where
   toMarkup = toMarkup . show
+
+--------------------------------------------------------------------------------
+
+data Suggestions = Suggestions { suggestions :: [AutoComplete] }
+
+data AutoComplete = AutoComplete { autoCompleteValue :: Text
+                                 , autoCompleteData  :: Integer
+                                 }
+  deriving (Show)
+
+fromCompetitor :: Competitor -> AutoComplete
+fromCompetitor Competitor{..} = AutoComplete (unwords [competitorFirstName, competitorLastName]) (unWscId competitorWscId)
+
+$(deriveJSON jsonOptions ''Suggestions)
+$(deriveJSON jsonOptions ''AutoComplete)
 
 --------------------------------------------------------------------------------
 
