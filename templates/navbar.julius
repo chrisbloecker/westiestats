@@ -5,7 +5,6 @@ function autocompleteSearch()
     serviceUrl: '@{AutoCompleteR}',
     onSelect: function(suggestion)
     {
-      //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
       $('#search-input').val(suggestion.value);
       $('#search-hidden').val(suggestion.data);
     }
