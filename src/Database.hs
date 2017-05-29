@@ -33,6 +33,7 @@ instance Indexable Competitor where
                                                                                                  , unwords [competitorFirstName, competitorLastName]
                                                                                                  , pack . show . unWscId $ competitorWscId
                                                                                                  ]
+                                                             , length prefix >= 3
                                              ]
                 ]
 

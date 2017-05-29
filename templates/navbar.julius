@@ -1,16 +1,13 @@
 function autocompleteSearch()
 {
-  if ($('#search-input').val().length >= 3)
+  $('#search-input').devbridgeAutocomplete(
   {
-    $('#search-input').devbridgeAutocomplete(
+    serviceUrl: '@{AutoCompleteR}',
+    onSelect: function(suggestion)
     {
-      serviceUrl: '@{AutoCompleteR}',
-      onSelect: function(suggestion)
-      {
-        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-        $('#search-input').val(suggestion.value);
-        $('#search-hidden').val(suggestion.data);
-      }
-    });
-  }
+      //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      $('#search-input').val(suggestion.value);
+      $('#search-hidden').val(suggestion.data);
+    }
+  });
 }
