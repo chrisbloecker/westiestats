@@ -28,7 +28,12 @@ instance Indexable Competitor where
                 , ixFun $ \Competitor{..} -> concatMap (map (eventId   . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> concatMap (map (eventYear . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> map resultDivision competitorResults
-                , ixFun $ \Competitor{..} -> [ Prefix prefix | prefix <- nub (inits competitorFirstName ++ inits competitorLastName), length prefix >= 3 ]
+                , ixFun $ \Competitor{..} -> [ Prefix prefix | prefix <- nub . concatMap inits $ [ competitorFirstName
+                                                                                                 , competitorLastName
+                                                                                                 , unwords [competitorFirstName, competitorLastName]
+                                                                                                 , pack . show . unWscId $ competitorWscId
+                                                                                                 ]
+                                             ]
                 ]
 
 instance Indexable EventDetails where

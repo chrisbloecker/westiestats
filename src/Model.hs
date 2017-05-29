@@ -124,18 +124,20 @@ instance ToMarkup Day where
 
 --------------------------------------------------------------------------------
 
-data Suggestions = Suggestions { suggestions :: [AutoComplete] }
+newtype Suggestions = Suggestions { unSuggestions :: [Suggestion] }
 
-data AutoComplete = AutoComplete { autoCompleteValue :: Text
-                                 , autoCompleteData  :: Integer
-                                 }
+data Suggestion = Suggestion { suggestionValue :: Text
+                             , suggestionData  :: Integer
+                             }
   deriving (Show)
 
-fromCompetitor :: Competitor -> AutoComplete
-fromCompetitor Competitor{..} = AutoComplete (unwords [competitorFirstName, competitorLastName]) (unWscId competitorWscId)
+mkSuggestion :: Competitor -> Suggestion
+mkSuggestion Competitor{..} = let value = unwords [competitorFirstName, competitorLastName, "(" ++ (pack . show . unWscId $ competitorWscId) ++ ")"]
+                                  data' = unWscId competitorWscId
+                              in Suggestion value data'
 
 $(deriveJSON jsonOptions ''Suggestions)
-$(deriveJSON jsonOptions ''AutoComplete)
+$(deriveJSON jsonOptions ''Suggestion)
 
 --------------------------------------------------------------------------------
 

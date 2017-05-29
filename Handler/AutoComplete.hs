@@ -11,4 +11,4 @@ getAutoCompleteR = do
   mquery <- lookupGetParam "query"
   case mquery of
     Nothing    -> return . toJSON $ Suggestions []
-    Just query ->          toJSON . Suggestions . map fromCompetitor <$> acidQuery (SearchPrefix $ Prefix query)
+    Just query ->          toJSON . Suggestions . map mkSuggestion <$> acidQuery (SearchPrefix $ Prefix query)

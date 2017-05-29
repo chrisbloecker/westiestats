@@ -5,8 +5,8 @@
 
 / HomeR GET
 
-/autocomplete AutoCompleteR GET
-/comments CommentR POST
-/competitor CompetitorR GET
-/event/#EventId/#EventYear EventR GET
-/events EventListR GET
+/autocomplete              AutoCompleteR GET
+/search                    SearchR       POST
+/competitor/#WscId         CompetitorR   GET
+/event/#EventId/#EventYear EventR        GET
+/events                    EventListR    GET

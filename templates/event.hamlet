@@ -29,11 +29,11 @@
                     <td>#{placement}
                     <td>
                       $forall (leader, leadername, _, _) <- leaders
-                        <a href="@{CompetitorR}?wscid=#{leader}">#{leadername}
+                        <a href="@{CompetitorR leader}">#{leadername}
                         <br>
                     <td>
                       $forall (follower, followername, _, _) <- followers
-                        <a href="@{CompetitorR}?wscid=#{follower}">#{followername}
+                        <a href="@{CompetitorR follower}">#{followername}
                         <br>
 
       <div .col-md-3 .col-lg-3>
@@ -47,7 +47,7 @@
                 <td>#{Finals}
                 <td>
                   $forall (leader, leadername, _, _) <- leaders
-                    <a href="@{CompetitorR}?wscid=#{leader}">#{leadername}
+                    <a href="@{CompetitorR leader}">#{leadername}
                     <br>
 
       <div .col-md-3 .col-lg-3>
@@ -61,5 +61,5 @@
                 <td>#{Finals}
                 <td>
                   $forall (follower, followername, _, _) <- followers
-                    <a href="@{CompetitorR}?wscid=#{follower}">#{followername}
+                    <a href="@{CompetitorR follower}">#{followername}
                     <br>

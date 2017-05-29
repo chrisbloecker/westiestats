@@ -31,7 +31,6 @@ import Model.External                       (day, person)
 import System.Directory                     (getDirectoryContents)
 --------------------------------------------------------------------------------
 import Handler.AutoComplete
-import Handler.Comment
 import Handler.Common
 import Handler.Competitor
 import Handler.Event

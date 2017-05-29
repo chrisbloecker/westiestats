@@ -18,14 +18,11 @@ library
                      Competitor
                      Database
                      Foundation
---                     Handler.Admin
                      Handler.AutoComplete
-                     Handler.Comment
                      Handler.Common
                      Handler.Competitor
                      Handler.Event
                      Handler.Home
---                     Handler.Search
                      Import
                      Import.DeriveJSON
                      Import.NoFoundation

@@ -9,7 +9,7 @@ function autocompleteSearch()
       {
         //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
         $('#search-input').val(suggestion.value);
-        $('#search-input').attr("val", suggestion.data);
+        $('#search-hidden').val(suggestion.data);
       }
     });
   }

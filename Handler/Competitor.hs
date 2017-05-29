@@ -6,8 +6,15 @@ import Import
 import Model
 --------------------------------------------------------------------------------
 
-getCompetitorR :: Handler Html
-getCompetitorR = do
-  wscid <- runInputGet $ WscId <$> ireq intField "wscid"
+postSearchR :: Handler Html
+postSearchR = do
+  mwscid <- runInputPost $ fmap WscId <$> iopt intField "wscid"
+  redirect $ case mwscid of
+    Nothing    -> HomeR
+    Just wscid -> CompetitorR wscid
+
+
+getCompetitorR :: WscId -> Handler Html
+getCompetitorR wscid = do
   mcompetitor <- acidQuery (GetCompetitor wscid)
   defaultLayout $(widgetFile "competitor")
