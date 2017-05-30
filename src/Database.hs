@@ -3,7 +3,7 @@
 module Database
   where
 --------------------------------------------------------------------------------
-import           ClassyPrelude       hiding (empty)
+import           ClassyPrelude       hiding (empty, toLower)
 import           Competitor                 (getPointsAsIn)
 import           Control.Monad.State        (get, put)
 import           Data.Acid                  (Update, Query, makeAcidic)
@@ -11,7 +11,7 @@ import           Data.IxSet          hiding ((&&&))
 import           Data.List                  (nub)
 import           Data.Maybe                 (fromJust)
 import           Data.SafeCopy              (deriveSafeCopy, base)
-import           Data.Text                  (inits)
+import           Data.Text                  (inits, toLower)
 import           Model
 --------------------------------------------------------------------------------
 import qualified Data.IxSet          as Ix  (toList)
@@ -28,11 +28,10 @@ instance Indexable Competitor where
                 , ixFun $ \Competitor{..} -> concatMap (map (eventId   . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> concatMap (map (eventYear . competitionEvent) . resultCompetitions) competitorResults
                 , ixFun $ \Competitor{..} -> map resultDivision competitorResults
-                , ixFun $ \Competitor{..} -> [ Prefix prefix | prefix <- nub . concatMap inits $ [ competitorFirstName
-                                                                                                 , competitorLastName
-                                                                                                 , unwords [competitorFirstName, competitorLastName]
-                                                                                                 , pack . show . unWscId $ competitorWscId
-                                                                                                 ]
+                , ixFun $ \Competitor{..} -> [ Prefix prefix | prefix <- nub . concatMap (inits . toLower) $ [ competitorLastName
+                                                                                                             , unwords [competitorFirstName, competitorLastName]
+                                                                                                             , pack . show . unWscId $ competitorWscId
+                                                                                                             ]
                                                              , length prefix >= 3
                                              ]
                 ]
