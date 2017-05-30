@@ -1,4 +1,4 @@
-<section .page-header>
+<div .row>
   <ul .nav .nav-pills .text-center .hidden-xs>
     $forall s <- starts
       $if s == start
@@ -20,7 +20,9 @@
             <li role="presentation">
               <a href="@{EventListR}?start=#{s}">#{s}
 
-<section .page-header>
+<hr>
+
+<div .row>
   <table .table .table-striped .table-hover>
     <thead>
       <th .col-md-3 .col-lg-3>Name

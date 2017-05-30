@@ -52,6 +52,7 @@ $newline never
       <div id="main" role="main">
         ^{pageBody navbar}
         ^{pageBody pc}
+      <hr>
       ^{pageBody footer}
 
     $maybe analytics <- appAnalytics $ appSettings master

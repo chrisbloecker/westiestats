@@ -1,26 +1,27 @@
-<section.page-header>
+<div .row>
   <div>
     $maybe competitor <- mcompetitor
       $with Competitor competitorId wscid firstName lastName results <- competitor
         <h2>#{wscid} - #{firstName} #{lastName}
-          $forall Result division points competitions <- results
-            <h4>#{division} - #{points} Points
-            <table .table .table-striped .table-hover>
-              <thead>
-                <th .col-md-2 .col-lg-2>_{MsgEventName}
-                <th .col-md-1 .col-lg-1>_{MsgEventLocation}
-                <th .col-md-1 .col-lg-1>_{MsgEventDate}
-                <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
-                <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
-                <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
-              <tbody>
-              $forall Competition (Event eventId name location month year) role placement points <- competitions
-                <tr>
-                  <td><a href=@{EventR eventId year}>#{name}
-                  <td>#{location}
-                  <td>#{month} #{year}
-                  <td>#{role}
-                  <td>#{placement}
-                  <td>#{points}
+        <hr>
+        $forall Result division points competitions <- results
+          <h4>#{division} - #{points} Points
+          <table .table .table-striped .table-hover>
+            <thead>
+              <th .col-md-2 .col-lg-2>_{MsgEventName}
+              <th .col-md-1 .col-lg-1>_{MsgEventLocation}
+              <th .col-md-1 .col-lg-1>_{MsgEventDate}
+              <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
+              <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
+              <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
+            <tbody>
+            $forall Competition (Event eventId name location month year) role placement points <- competitions
+              <tr>
+                <td><a href=@{EventR eventId year}>#{name}
+                <td>#{location}
+                <td>#{month} #{year}
+                <td>#{role}
+                <td>#{placement}
+                <td>#{points}
     $nothing
       Competitor not found.

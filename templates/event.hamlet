@@ -1,7 +1,7 @@
 <h1 .jumbotron .text-center>
   #{eventDetailsName} - #{eventYear}
 
-<section .page-header>
+<div .row>
   <ul .nav .nav-pills .text-center>
     $forall year <- years
       $if year == eventYear
@@ -11,7 +11,9 @@
         <li role="presentation">
           <a href="@{EventR eventId year}">#{year}
 
-<section .page-header>
+<hr>
+
+<div .row>
   $forall division <- divisions
     <div .row>
       <h3 .text-center>#{division}
