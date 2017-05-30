@@ -25,7 +25,6 @@ import Database
 import Data.Acid
 import Data.Acid.Advanced
 import Data.JsonStream.Parser               ((.:))
---import Import.DeriveJSON                    (eitherDecode')
 import Model                                (fromPerson)
 import Model.External                       (day, person)
 import System.Directory                     (getDirectoryContents)

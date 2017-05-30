@@ -1,7 +1,0 @@
-<section>
-  <div>
-    <form method=post action=@{AdminR} enctype=#{loadEnctype}>
-      ^{loadWidget}
-      <button .btn .btn-success type="submit">
-         <span .glyphicon .glyphicon-upload>
-         Upload

@@ -51,7 +51,8 @@ $newline never
       <header>
       <div id="main" role="main">
         ^{pageBody navbar}
-        ^{pageBody pc}
+        <div .container>
+          ^{pageBody pc}
       <hr>
       ^{pageBody footer}
 
