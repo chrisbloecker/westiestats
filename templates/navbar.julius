@@ -1,12 +1,15 @@
-function autocompleteSearch()
+$(function ()
 {
-  $('#search-input').devbridgeAutocomplete(
+  'use strict';
+
+  $('#search-input').autocomplete(
   {
     serviceUrl: '@{AutoCompleteR}',
+    minChars: 3,
     onSelect: function(suggestion)
     {
       $('#search-input').val(suggestion.value);
       $('#search-hidden').val(suggestion.data);
     }
   });
-}
+});
