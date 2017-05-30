@@ -1,5 +1,5 @@
 <section .page-header>
-  <ul .nav .nav-pills .text-center>
+  <ul .nav .nav-pills .text-center .hidden-xs>
     $forall s <- starts
       $if s == start
         <li role="presentation" .active>
@@ -7,6 +7,18 @@
       $else
         <li role="presentation">
           <a href="@{EventListR}?start=#{s}">#{s}
+  <div .text-center .visible-xs>
+    <div .dropdown .btn-group>
+      <button .btn .btn-primary .dropdown-toggle type="button" data-toggle="dropdown">Start: #{start} #
+        <span .caret>
+      <ul .dropdown-menu>
+        $forall s <- starts
+          $if s == start
+            <li role="presentation" .active>
+              <a href="@{EventListR}?start=#{s}">#{s}
+          $else
+            <li role="presentation">
+              <a href="@{EventListR}?start=#{s}">#{s}
 
 <section .page-header>
   <table .table .table-striped .table-hover>
