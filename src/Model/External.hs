@@ -6,6 +6,7 @@ module Model.External
 import ClassyPrelude
 import Data.JsonStream.Parser ((.:), (.:?), integer, string, arrayOf)
 import Data.Maybe             (fromJust)
+import Data.Text              (splitOn, strip)
 import Import.DeriveJSON
 import Text.Blaze             (ToMarkup (..))
 --------------------------------------------------------------------------------
@@ -59,10 +60,23 @@ data Competition = Competition { competitionRole   :: !Text
 
 data Event = Event { eventId       :: !Integer
                    , eventName     :: !Text
-                   , eventLocation :: !Text
+                   , eventLocation :: !(Maybe Location)
                    , eventUrl      :: !(Maybe Text)
                    , eventDate     :: !Text
                    }
+  deriving (Show)
+
+data Location = Location { locationCity    :: !Text
+                         , locationCountry :: !Country
+                         }
+  deriving (Show)
+
+data Country = Australia
+             | Germany
+             | Sweden
+             | Finland
+             | Norway
+             | Unknown
   deriving (Show)
 
 --------------------------------------------------------------------------------
@@ -106,11 +120,26 @@ competition = Competition <$> getLabel "competitionRole"   .: string
                           <*> getLabel "competitionResult" .: string
 
 event :: Stream.Parser Event
-event = Event <$> getLabel "eventId"       .:  parseInteger
-              <*> getLabel "eventName"     .:  string
-              <*> getLabel "eventLocation" .:  string
-              <*> getLabel "eventUrl"      .:? string
-              <*> getLabel "eventDate"     .:  string
+event = Event <$>                  getLabel "eventId"       .:  parseInteger
+              <*>                  getLabel "eventName"     .:  string
+              <*> fmap toLocation (getLabel "eventLocation" .:  string)
+              <*>                  getLabel "eventUrl"      .:? string
+              <*>                  getLabel "eventDate"     .:  string
+
+toLocation :: Text -> Maybe Location
+toLocation t = case map strip . splitOn "," $ t of
+  [""]            -> Nothing
+  [      country] -> Just $ Location ""   (mkCountry country)
+  [city, country] -> Just $ Location city (mkCountry country)
+  _               -> fail $ "Unexpected form0at for location: " ++ unpack t
+
+mkCountry :: Text -> Country
+mkCountry "Australia" = Australia
+mkCountry "Finland"   = Finland
+mkCountry "Germany"   = Germany
+mkCountry "Sweden"    = Sweden
+mkCountry "Norway"    = Norway
+mkCountry _           = Unknown
 
 day :: Stream.Parser Day
 day = fromJust . parseTimeM False defaultTimeLocale "%0Y-%m-%d" . unpack <$> string
@@ -155,3 +184,5 @@ $(deriveJSON jsonOptions ''Division)
 $(deriveJSON jsonOptions ''Details)
 $(deriveJSON jsonOptions ''Competition)
 $(deriveJSON jsonOptions ''Event)
+$(deriveJSON jsonOptions ''Location)
+$(deriveJSON jsonOptions ''Country)

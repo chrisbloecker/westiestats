@@ -1,0 +1,12 @@
+$(function ()
+{
+  AmCharts.makeChart( "worldmap",
+  { "type": "map"
+  , "dataProvider" : { "map"   : "worldLow"
+                     , "areas" : #{toJSON areas}
+                     }
+  , "areasSettings": { "autoZoom"      : true
+                     , "selectedColor" : "#CC0000"
+                     }
+  });
+});

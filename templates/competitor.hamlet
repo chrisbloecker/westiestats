@@ -4,6 +4,7 @@
       $with Competitor competitorId wscid firstName lastName results <- competitor
         <h2>#{wscid} - #{firstName} #{lastName}
         <hr>
+        <div id="worldmap">
         $forall Result division points competitions <- results
           <h4>#{division} - #{points} Points
           <table .table .table-striped .table-hover>

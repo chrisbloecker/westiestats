@@ -49,6 +49,8 @@ fieldLabel "unSuggestions"        = "suggestions"
 -- auto complete
 fieldLabel "suggestionValue"      = "value"
 fieldLabel "suggestionData"       = "data"
+-- countried for the world map
+fieldLabel "unCountry"            = "id"
 -- all the rest
 fieldLabel s = s
 

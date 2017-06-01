@@ -91,6 +91,9 @@ newtype ResultPoints = ResultPoints { unResultPoints :: Integer } deriving (Eq, 
 newtype EventId      = EventId      { unEventId      :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype EventYear    = EventYear    { unEventYear    :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype Prefix       = Prefix       { unPrefix       :: Text    } deriving (Eq, Ord, Show)
+newtype Country      = Country      { unCountry      :: Text    } deriving (Eq)
+
+$(deriveJSON jsonOptions ''Country)
 --------------------------------------------------------------------------------
 
 instance ToMarkup Division where
