@@ -5,7 +5,9 @@ module Model
 --------------------------------------------------------------------------------
 import ClassyPrelude
 import Data.List           ((!!))
+import Data.Text           (splitOn, strip)
 import Import.DeriveJSON
+import Model.Location
 import Text.Blaze          (ToMarkup (..))
 import Text.Read           (read)
 import Web.PathPieces      (PathPiece (..))
@@ -38,7 +40,7 @@ data Competition = Competition { competitionEvent     :: !Event
 
 data Event = Event { eventId       :: !EventId
                    , eventName     :: !Text
-                   , eventLocation :: !Text
+                   , eventLocation :: !(Maybe Location)
                    , eventMonth    :: !Text
                    , eventYear     :: !EventYear
                    }
@@ -91,9 +93,6 @@ newtype ResultPoints = ResultPoints { unResultPoints :: Integer } deriving (Eq, 
 newtype EventId      = EventId      { unEventId      :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype EventYear    = EventYear    { unEventYear    :: Integer } deriving (Eq, Ord, Show, Read, PathPiece)
 newtype Prefix       = Prefix       { unPrefix       :: Text    } deriving (Eq, Ord, Show)
-newtype Country      = Country      { unCountry      :: Text    } deriving (Eq)
-
-$(deriveJSON jsonOptions ''Country)
 --------------------------------------------------------------------------------
 
 instance ToMarkup Division where
@@ -217,7 +216,7 @@ fromEvent :: E.Event -> Event
 fromEvent E.Event{..} =
   Event { eventId       = EventId eventId
         , eventName     = eventName
-        , eventLocation = eventLocation
+        , eventLocation = parseLocation eventLocation
         , eventMonth    =                       words eventDate !! 0
         , eventYear     = EventYear. readInt $ (words eventDate !! 1)
         }

@@ -28,6 +28,7 @@ library
                      Import.NoFoundation
                      Model
                      Model.External
+                     Model.Location
                      Settings
                      Settings.StaticFiles
 
@@ -96,6 +97,7 @@ library
                  , path-pieces
                  , conduit-extra
                  , json-stream
+                 , attoparsec
 
 executable         westiestats
     if flag(library-only)
