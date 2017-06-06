@@ -15,7 +15,8 @@ module Application
 import Control.Monad.Logger                 (liftLoc)
 import Import                        hiding ((.:))
 import Language.Haskell.TH.Syntax           (qLocation)
-import Network.Wai (Middleware)
+import Network.Wai                          (Middleware)
+import Network.Wai.Middleware.Cors          (simpleCors)
 import Network.Wai.Handler.Warp             (Settings, defaultSettings, defaultShouldDisplayException, runSettings, setHost, setOnException, setPort, getPort)
 import Network.Wai.Middleware.RequestLogger (Destination (Logger), IPAddrSource (..), OutputFormat (..), destination, mkRequestLogger, outputFormat)
 import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet, toLogStr)
@@ -86,24 +87,6 @@ makeFoundation appSettings = do
 
     putStrLn "[DEBUG] Database loaded"
 
-    {-
-    let msnapshot = eitherDecode' json :: Either String Snapshot
-    case msnapshot of
-      Left err -> error $ pack err
-      Right Snapshot{..} -> do
-        oldDate <- query getDatabase GetSnapshotDate
-        -- We only build up the database if the snapshot is newer
-        when (oldDate < snapshotDate) $ do
-          putStrLn $ unwords ["[INFO] The old snapshot was from", pack . show $ oldDate, "but there is a new version from", pack . show $ snapshotDate]
-          groupUpdates getDatabase [SetSnapshotDate snapshotDate]
-          forM_ snapshotPersons $ \person -> do
-            let competitor = fromPerson person
-            groupUpdates getDatabase [InsertCompetitor competitor]
-            groupUpdates getDatabase [InsertEventDetails event | event <- extractEventDetails competitor]
-          createCheckpoint getDatabase
-          createArchive getDatabase
-    -}
-
     -- Return the foundation
     return App {..}
 
@@ -114,7 +97,7 @@ makeApplication foundation = do
     logWare <- makeLogWare foundation
     -- Create the WAI application and apply middlewares
     appPlain <- toWaiAppPlain foundation
-    return $ logWare $ defaultMiddlewaresNoLogging appPlain
+    return $ simpleCors $ logWare $ defaultMiddlewaresNoLogging $ appPlain
 
 makeLogWare :: App -> IO Middleware
 makeLogWare foundation =
