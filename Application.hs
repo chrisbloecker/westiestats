@@ -17,8 +17,6 @@ import Import                        hiding ((.:))
 import Language.Haskell.TH.Syntax           (qLocation)
 import Network.Wai                          (Middleware)
 import Network.Wai.Handler.Warp             (Settings, defaultSettings, defaultShouldDisplayException, runSettings, setHost, setOnException, setPort, getPort)
-import Network.Wai.Middleware.AddHeaders    (addHeaders)
-import Network.Wai.Middleware.Cors          (CorsResourcePolicy (..), cors, simpleCorsResourcePolicy)
 import Network.Wai.Middleware.RequestLogger (Destination (Logger), IPAddrSource (..), OutputFormat (..), destination, mkRequestLogger, outputFormat)
 import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet, toLogStr)
 --------------------------------------------------------------------------------
@@ -98,22 +96,7 @@ makeApplication foundation = do
     logWare <- makeLogWare foundation
     -- Create the WAI application and apply middlewares
     appPlain <- toWaiAppPlain foundation
-    return $ logWare . allowCsrf . corsPolicy $ defaultMiddlewaresNoLogging $ appPlain
-
-  where
-    allowCsrf :: Middleware
-    allowCsrf = addHeaders [("Access-Control-Allow-Headers", "x-csrf-token,authorization")]
-
-    corsPolicy :: Middleware
-    corsPolicy = cors . const . Just $ CorsResourcePolicy { corsOrigins        = Nothing
-                                                          , corsMethods        = ["OPTIONS", "GET", "PUT", "POST"]
-                                                          , corsRequestHeaders = ["Authorization", "Content-Type"]
-                                                          , corsExposedHeaders = Nothing
-                                                          , corsMaxAge         = Nothing
-                                                          , corsVaryOrigin     = False
-                                                          , corsRequireOrigin  = False
-                                                          , corsIgnoreFailures = False
-                                                          }
+    return $ logWare $ defaultMiddlewaresNoLogging $ appPlain
 
 
 makeLogWare :: App -> IO Middleware

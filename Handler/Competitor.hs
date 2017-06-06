@@ -23,6 +23,4 @@ getCompetitorR wscid = do
       countries = nub . mapMaybe locationCountry <$> locations
       states    = nub . mapMaybe locationState   <$> locations
 
-  $(logInfo) (pack . show $ states)
-
   defaultLayout $(widgetFile "competitor")

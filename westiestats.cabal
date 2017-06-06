@@ -99,7 +99,6 @@ library
                  , conduit-extra
                  , json-stream
                  , attoparsec
-                 , wai-cors
 
 executable         westiestats
     if flag(library-only)
