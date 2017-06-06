@@ -6,9 +6,6 @@ $(function ()
   , "dataProvider"  : { "map"   : "worldLow"
                       , "areas" : #{toJSON countries}
                       }
-  , "areasSettings" : { "autoZoom"      : true
-                      , "selectedColor" : "#CC0000"
-                      }
   });
 
   AmCharts.makeChart( "usamap",
@@ -16,9 +13,6 @@ $(function ()
   , "theme"         : "light"
   , "dataProvider"  : { "map"   : "usaLow"
                       , "areas" : #{toJSON states}
-                      }
-  , "areasSettings" : { "autoZoom"      : true
-                      , "selectedColor" : "#CC0000"
                       }
   });
 });

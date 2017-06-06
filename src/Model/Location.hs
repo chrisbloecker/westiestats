@@ -403,16 +403,17 @@ state = (string "AL" >> return (Just Alabama))
     <|> (string "WY" >> return (Just Wyoming))
 
     -- states in Canada
-    <|> (string "AB" >> return (Just Alberta))
-    <|> (string "BC" >> return (Just BritishColumbia))
-    <|> (string "NB" >> return (Just NewBrunswick))
-    <|> (string "NL" >> return (Just Newfoundland))
-    <|> (string "NS" >> return (Just NovaScotia))
-    <|> (string "MB" >> return (Just Manitoba))
-    <|> (string "ON" >> return (Just Ontario))
-    <|> (string "PE" >> return (Just PrinceEdwardIsland))
-    <|> (string "QC" >> return (Just Quebec))
-    <|> (string "SK" >> return (Just Saskatchewan))
+    <|> (string "AB"      >> return (Just Alberta))
+    <|> (string "Alberta" >> return (Just Alberta))
+    <|> (string "BC"      >> return (Just BritishColumbia))
+    <|> (string "NB"      >> return (Just NewBrunswick))
+    <|> (string "NL"      >> return (Just Newfoundland))
+    <|> (string "NS"      >> return (Just NovaScotia))
+    <|> (string "MB"      >> return (Just Manitoba))
+    <|> (string "ON"      >> return (Just Ontario))
+    <|> (string "PE"      >> return (Just PrinceEdwardIsland))
+    <|> (string "QC"      >> return (Just Quebec))
+    <|> (string "SK"      >> return (Just Saskatchewan))
 
     <|> return Nothing
 
