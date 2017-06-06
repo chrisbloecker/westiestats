@@ -1,10 +1,12 @@
 <div .row>
   <div>
     $maybe competitor <- mcompetitor
-      $with Competitor competitorId wscid firstName lastName results <- competitor
+      $with Competitor _ wscid firstName lastName results <- competitor
         <h2>#{wscid} - #{firstName} #{lastName}
         <hr>
-        <div id="worldmap">
+        <div .row>
+          <div id="worldmap" .col-md-6 .col-lg-6>
+          <div id="usamap"   .col-md-6 .col-lg-6>
         $forall Result division points competitions <- results
           <h4>#{division} - #{points} Points
           <table .table .table-striped .table-hover>

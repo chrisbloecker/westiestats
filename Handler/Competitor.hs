@@ -2,6 +2,7 @@ module Handler.Competitor
   where
 --------------------------------------------------------------------------------
 import Database
+import Data.List (nub)
 import Import
 import Model
 --------------------------------------------------------------------------------
@@ -18,7 +19,10 @@ getCompetitorR :: WscId -> Handler Html
 getCompetitorR wscid = do
   mcompetitor <- acidQuery (GetCompetitor wscid)
 
-  let areas = catMaybes . map (locationCountry . eventLocation . competitionEvent) . concatMap resultCompetitions . competitorResults <$> mcompetitor
-  $(logInfo) (pack . show $ areas)
+  let locations = map (eventLocation . competitionEvent) . concatMap resultCompetitions . competitorResults <$> mcompetitor
+      countries = nub . mapMaybe locationCountry <$> locations
+      states    = nub . mapMaybe locationState   <$> locations
+
+  $(logInfo) (pack . show $ states)
 
   defaultLayout $(widgetFile "competitor")

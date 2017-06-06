@@ -1,12 +1,24 @@
 $(function ()
 {
   AmCharts.makeChart( "worldmap",
-  { "type": "map"
-  , "dataProvider" : { "map"   : "worldLow"
-                     , "areas" : #{toJSON areas}
-                     }
-  , "areasSettings": { "autoZoom"      : true
-                     , "selectedColor" : "#CC0000"
-                     }
+  { "type"          : "map"
+  , "theme"         : "light"
+  , "dataProvider"  : { "map"   : "worldLow"
+                      , "areas" : #{toJSON countries}
+                      }
+  , "areasSettings" : { "autoZoom"      : true
+                      , "selectedColor" : "#CC0000"
+                      }
+  });
+
+  AmCharts.makeChart( "usamap",
+  { "type"          : "map"
+  , "theme"         : "light"
+  , "dataProvider"  : { "map"   : "usaLow"
+                      , "areas" : #{toJSON states}
+                      }
+  , "areasSettings" : { "autoZoom"      : true
+                      , "selectedColor" : "#CC0000"
+                      }
   });
 });

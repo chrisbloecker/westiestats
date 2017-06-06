@@ -24,6 +24,10 @@ $newline never
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.0.3/js.cookie.min.js">
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.1/jquery.autocomplete.min.js" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/worldLow.js" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/usaLow.js" crossorigin="anonymous">
+    <script type="text/javascript" src="https://www.amcharts.com/lib/3/themes/light.js" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/ammap.css" type="text/css" media="all">
 
