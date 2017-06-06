@@ -46,6 +46,10 @@ deriveSafeCopy 0 'base ''Competitor
 deriveSafeCopy 0 'base ''Result
 deriveSafeCopy 0 'base ''Competition
 deriveSafeCopy 0 'base ''Event
+deriveSafeCopy 0 'base ''Location
+deriveSafeCopy 0 'base ''City
+deriveSafeCopy 0 'base ''State
+deriveSafeCopy 0 'base ''Country
 deriveSafeCopy 0 'base ''EventDetails
 deriveSafeCopy 0 'base ''Division
 deriveSafeCopy 0 'base ''Placement

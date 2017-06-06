@@ -1,13 +1,13 @@
 {-# OPTIONS_GHC -fno-unbox-strict-fields #-}
 --------------------------------------------------------------------------------
 module Model
-  where
+  ( module Model
+  ) where
 --------------------------------------------------------------------------------
 import ClassyPrelude
 import Data.List           ((!!))
-import Data.Text           (splitOn, strip)
 import Import.DeriveJSON
-import Model.Location
+import Model.Location as Model
 import Text.Blaze          (ToMarkup (..))
 import Text.Read           (read)
 import Web.PathPieces      (PathPiece (..))
@@ -40,7 +40,7 @@ data Competition = Competition { competitionEvent     :: !Event
 
 data Event = Event { eventId       :: !EventId
                    , eventName     :: !Text
-                   , eventLocation :: !(Maybe Location)
+                   , eventLocation :: !Location
                    , eventMonth    :: !Text
                    , eventYear     :: !EventYear
                    }
@@ -48,7 +48,7 @@ data Event = Event { eventId       :: !EventId
 
 data EventDetails = EventDetails { eventDetailsId       :: !EventId
                                  , eventDetailsName     :: !Text
-                                 , eventDetailsLocation :: !Text
+                                 , eventDetailsLocation :: !Location
                                  , eventDetailsResults  :: !(Map EventYear (Map Division (Set ResultEntry)))
                                  }
   deriving (Eq, Ord, Show)

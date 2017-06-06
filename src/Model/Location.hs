@@ -2,7 +2,9 @@ module Model.Location
   where
 
 import ClassyPrelude
+import Data.Aeson
 import Data.Attoparsec.Text
+import Text.Blaze           (ToMarkup (..))
 
 data Location = Location { locationText    :: !Text
                          , locationCity    :: !(Maybe City)
@@ -10,6 +12,9 @@ data Location = Location { locationText    :: !Text
                          , locationCountry :: !(Maybe Country)
                          }
   deriving (Eq, Ord, Show)
+
+instance ToMarkup Location where
+  toMarkup Location{..} = toMarkup locationText
 
 newtype City = City { unCity :: Text } deriving (Eq, Ord, Show)
 
@@ -40,6 +45,34 @@ data Country = Australia
              | UnitedKingdom
              | UnitedStates
   deriving (Eq, Ord, Show)
+
+instance ToJSON Country where
+  toJSON Australia     = object [ "id" .= ("AU" :: Text) ]
+  toJSON Austria       = object [ "id" .= ("AT" :: Text) ]
+  toJSON Brazil        = object [ "id" .= ("BR" :: Text) ]
+  toJSON Canada        = object [ "id" .= ("CA" :: Text) ]
+  toJSON England       = object [ "id" .= ("GB" :: Text) ]
+  toJSON France        = object [ "id" .= ("FR" :: Text) ]
+  toJSON Finland       = object [ "id" .= ("FI" :: Text) ]
+  toJSON Germany       = object [ "id" .= ("DE" :: Text) ]
+  toJSON Hungary       = object [ "id" .= ("HU" :: Text) ]
+  toJSON Israel        = object [ "id" .= ("IL" :: Text) ]
+  toJSON Italy         = object [ "id" .= ("IT" :: Text) ]
+  toJSON Latvia        = object [ "id" .= ("LV" :: Text) ]
+  toJSON Netherlands   = object [ "id" .= ("NL" :: Text) ]
+  toJSON NewZealand    = object [ "id" .= ("NZ" :: Text) ]
+  toJSON Norway        = object [ "id" .= ("NO" :: Text) ]
+  toJSON Poland        = object [ "id" .= ("PL" :: Text) ]
+  toJSON Russia        = object [ "id" .= ("RU" :: Text) ]
+  toJSON Scotland      = object [ "id" .= ("GB" :: Text) ]
+  toJSON Singapore     = object [ "id" .= ("SG" :: Text) ]
+  toJSON SouthKorea    = object [ "id" .= ("KR" :: Text) ]
+  toJSON Spain         = object [ "id" .= ("ES" :: Text) ]
+  toJSON Sweden        = object [ "id" .= ("SE" :: Text) ]
+  toJSON Switzerland   = object [ "id" .= ("CH" :: Text) ]
+  toJSON Ukraine       = object [ "id" .= ("UA" :: Text) ]
+  toJSON UnitedKingdom = object [ "id" .= ("GB" :: Text) ]
+  toJSON UnitedStates  = object [ "id" .= ("US" :: Text) ]
 
 data State = -- states in the United States
              Alabama            -- AL
@@ -104,124 +137,284 @@ data State = -- states in the United States
            | PrinceEdwardIsland -- PE
            | Quebec             -- QC
            | Saskatchewan       -- SK
-
-             -- some others that appear...
-           | UnitedKingdom'     -- UK
   deriving (Eq, Ord, Show)
+
+instance ToJSON State where
+  toJSON Alabama            = object [ "id" .= ("AL" :: Text) ]
+  toJSON Alaska             = object [ "id" .= ("AK" :: Text) ]
+  toJSON Arizona            = object [ "id" .= ("AZ" :: Text) ]
+  toJSON Arkansas           = object [ "id" .= ("AR" :: Text) ]
+  toJSON California         = object [ "id" .= ("CA" :: Text) ]
+  toJSON Colorado           = object [ "id" .= ("CO" :: Text) ]
+  toJSON Connecticut        = object [ "id" .= ("CT" :: Text) ]
+  toJSON DistrictOfColumbia = object [ "id" .= ("DC" :: Text) ]
+  toJSON Delaware           = object [ "id" .= ("DE" :: Text) ]
+  toJSON Florida            = object [ "id" .= ("FL" :: Text) ]
+  toJSON Georgia            = object [ "id" .= ("GA" :: Text) ]
+  toJSON Hawaii             = object [ "id" .= ("HI" :: Text) ]
+  toJSON Idaho              = object [ "id" .= ("ID" :: Text) ]
+  toJSON Illinois           = object [ "id" .= ("IL" :: Text) ]
+  toJSON Indiana            = object [ "id" .= ("IN" :: Text) ]
+  toJSON Iowa               = object [ "id" .= ("IA" :: Text) ]
+  toJSON Kansas             = object [ "id" .= ("KS" :: Text) ]
+  toJSON Kentucky           = object [ "id" .= ("KY" :: Text) ]
+  toJSON Louisiana          = object [ "id" .= ("LA" :: Text) ]
+  toJSON Maine              = object [ "id" .= ("ME" :: Text) ]
+  toJSON Maryland           = object [ "id" .= ("MD" :: Text) ]
+  toJSON Massachusetts      = object [ "id" .= ("MA" :: Text) ]
+  toJSON Michigan           = object [ "id" .= ("MI" :: Text) ]
+  toJSON Minnesota          = object [ "id" .= ("MN" :: Text) ]
+  toJSON Mississippi        = object [ "id" .= ("MS" :: Text) ]
+  toJSON Montana            = object [ "id" .= ("MO" :: Text) ]
+  toJSON Nebraska           = object [ "id" .= ("NE" :: Text) ]
+  toJSON Nevada             = object [ "id" .= ("NV" :: Text) ]
+  toJSON NewHampshire       = object [ "id" .= ("NH" :: Text) ]
+  toJSON NewJersey          = object [ "id" .= ("NJ" :: Text) ]
+  toJSON NewMexico          = object [ "id" .= ("NM" :: Text) ]
+  toJSON NewYork            = object [ "id" .= ("NY" :: Text) ]
+  toJSON NorthCarolina      = object [ "id" .= ("NC" :: Text) ]
+  toJSON NorthDakota        = object [ "id" .= ("ND" :: Text) ]
+  toJSON Ohio               = object [ "id" .= ("OH" :: Text) ]
+  toJSON Oklahoma           = object [ "id" .= ("OK" :: Text) ]
+  toJSON Oregon             = object [ "id" .= ("OR" :: Text) ]
+  toJSON Pennsylvania       = object [ "id" .= ("PA" :: Text) ]
+  toJSON RhodeIsland        = object [ "id" .= ("RI" :: Text) ]
+  toJSON SouthCarolina      = object [ "id" .= ("SC" :: Text) ]
+  toJSON SouthDakota        = object [ "id" .= ("SD" :: Text) ]
+  toJSON Tennessee          = object [ "id" .= ("TN" :: Text) ]
+  toJSON Texas              = object [ "id" .= ("TX" :: Text) ]
+  toJSON Utah               = object [ "id" .= ("UT" :: Text) ]
+  toJSON Vermont            = object [ "id" .= ("VT" :: Text) ]
+  toJSON Virginia           = object [ "id" .= ("VA" :: Text) ]
+  toJSON Washington         = object [ "id" .= ("WA" :: Text) ]
+  toJSON WestVirginia       = object [ "id" .= ("WV" :: Text) ]
+  toJSON Wisconsin          = object [ "id" .= ("WI" :: Text) ]
+  toJSON Wyoming            = object [ "id" .= ("WY" :: Text) ]
+  toJSON Alberta            = object [ "id" .= ("AB" :: Text) ]
+  toJSON BritishColumbia    = object [ "id" .= ("BC" :: Text) ]
+  toJSON NewBrunswick       = object [ "id" .= ("NB" :: Text) ]
+  toJSON Newfoundland       = object [ "id" .= ("NL" :: Text) ]
+  toJSON NovaScotia         = object [ "id" .= ("NS" :: Text) ]
+  toJSON Manitoba           = object [ "id" .= ("MB" :: Text) ]
+  toJSON Ontario            = object [ "id" .= ("ON" :: Text) ]
+  toJSON PrinceEdwardIsland = object [ "id" .= ("PE" :: Text) ]
+  toJSON Quebec             = object [ "id" .= ("QC" :: Text) ]
+  toJSON Saskatchewan       = object [ "id" .= ("SK" :: Text) ]
+
+countryFromState :: State -> Country
+countryFromState Alabama            = UnitedStates
+countryFromState Alaska             = UnitedStates
+countryFromState Arizona            = UnitedStates
+countryFromState Arkansas           = UnitedStates
+countryFromState California         = UnitedStates
+countryFromState Colorado           = UnitedStates
+countryFromState Connecticut        = UnitedStates
+countryFromState DistrictOfColumbia = UnitedStates
+countryFromState Delaware           = UnitedStates
+countryFromState Florida            = UnitedStates
+countryFromState Georgia            = UnitedStates
+countryFromState Hawaii             = UnitedStates
+countryFromState Idaho              = UnitedStates
+countryFromState Illinois           = UnitedStates
+countryFromState Indiana            = UnitedStates
+countryFromState Iowa               = UnitedStates
+countryFromState Kansas             = UnitedStates
+countryFromState Kentucky           = UnitedStates
+countryFromState Louisiana          = UnitedStates
+countryFromState Maine              = UnitedStates
+countryFromState Maryland           = UnitedStates
+countryFromState Massachusetts      = UnitedStates
+countryFromState Michigan           = UnitedStates
+countryFromState Minnesota          = UnitedStates
+countryFromState Mississippi        = UnitedStates
+countryFromState Montana            = UnitedStates
+countryFromState Nebraska           = UnitedStates
+countryFromState Nevada             = UnitedStates
+countryFromState NewHampshire       = UnitedStates
+countryFromState NewJersey          = UnitedStates
+countryFromState NewMexico          = UnitedStates
+countryFromState NewYork            = UnitedStates
+countryFromState NorthCarolina      = UnitedStates
+countryFromState NorthDakota        = UnitedStates
+countryFromState Ohio               = UnitedStates
+countryFromState Oklahoma           = UnitedStates
+countryFromState Oregon             = UnitedStates
+countryFromState Pennsylvania       = UnitedStates
+countryFromState RhodeIsland        = UnitedStates
+countryFromState SouthCarolina      = UnitedStates
+countryFromState SouthDakota        = UnitedStates
+countryFromState Tennessee          = UnitedStates
+countryFromState Texas              = UnitedStates
+countryFromState Utah               = UnitedStates
+countryFromState Vermont            = UnitedStates
+countryFromState Virginia           = UnitedStates
+countryFromState Washington         = UnitedStates
+countryFromState WestVirginia       = UnitedStates
+countryFromState Wisconsin          = UnitedStates
+countryFromState Wyoming            = UnitedStates
+countryFromState Alberta            = Canada
+countryFromState BritishColumbia    = Canada
+countryFromState NewBrunswick       = Canada
+countryFromState Newfoundland       = Canada
+countryFromState NovaScotia         = Canada
+countryFromState Manitoba           = Canada
+countryFromState Ontario            = Canada
+countryFromState PrinceEdwardIsland = Canada
+countryFromState Quebec             = Canada
+countryFromState Saskatchewan       = Canada
 
 
 parseLocation :: Text -> Location
 parseLocation t = case parseOnly location t of
   Left  _   -> Location t Nothing Nothing Nothing
-  Right loc -> loc
+  Right loc -> loc { locationText = t }
 
 location :: Parser Location
-location = (do skipSpace
-               parsedCountry <- country
-               skipSpace
-               return parsedCountry
-           )
-       <|> (do skipSpace
-               parsedCity <- city
-               skipSpace
-               char ","
-               skipSpace
-               parsedCountry <- country
-               skipSpace
-           )
+location = cityAndCountry <|> cityAndState <|> justCountry
+  where
+    cityAndCountry :: Parser Location
+    cityAndCountry = do
+      skipSpace
+      locationCity <- city
+      skipSpace
+      _ <- char ','
+      skipSpace
+      locationCountry <- country
+      skipSpace
+      b <- atEnd
+      unless b $ fail "Unconsumed input"
+      let locationState = Nothing
+          locationText  = ""
+      return Location{..}
 
-country :: Parser Country
-country = (string "Australia"      >> return Australia)
-      <|> (string "Austria"        >> return Austria)
-      <|> (string "Brazil"         >> return Brazil)
-      <|> (string "Canada"         >> return Canada)
-      <|> (string "England"        >> return England)
-      <|> (string "France"         >> return France)
-      <|> (string "Finland"        >> return Finland)
-      <|> (string "Germany"        >> return Germany)
-      <|> (string "Hungary"        >> return Hungary)
-      <|> (string "Israel"         >> return Israel)
-      <|> (string "Italy"          >> return Italy)
-      <|> (string "Korea"          >> return SouthKorea)
-      <|> (string "Latvia"         >> return Latvia)
-      <|> (string "Netherlands"    >> return Netherlands)
-      <|> (string "New Zealand"    >> return NewZealand)
-      <|> (string "Norway"         >> return Norway)
-      <|> (string "Poland"         >> return Poland)
-      <|> (string "Russia"         >> return Russia)
-      <|> (string "Scotland"       >> return Scotland)
-      <|> (string "Singapore"      >> return Singapore)
-      <|> (string "SouthKorea"     >> return SouthKorea)
-      <|> (string "Spain"          >> return Spain)
-      <|> (string "Sweden"         >> return Sweden)
-      <|> (string "Switzerland"    >> return Switzerland)
-      <|> (string "Ukraine"        >> return Ukraine)
-      <|> (string "United Kingdom" >> return UnitedKingdom)
-      <|> (string "UK"             >> return UnitedKingdom)
-      <|> (string "United States"  >> return UnitedStates)
+    cityAndState :: Parser Location
+    cityAndState = do
+      skipSpace
+      locationCity <- city
+      skipSpace
+      _ <- char ','
+      skipSpace
+      locationState <- state
+      skipSpace
+      b <- atEnd
+      unless b $ fail "Unconsumed input"
+      let locationCountry = countryFromState <$> locationState
+          locationText    = ""
+      return Location{..}
+
+    justCountry :: Parser Location
+    justCountry = do
+      skipSpace
+      locationCountry <- country
+      skipSpace
+      b <- atEnd
+      unless b $ fail $ "Unconsumed input"
+      let locationState = Nothing
+          locationCity  = Nothing
+          locationText  = ""
+      return Location{..}
+
+
+country :: Parser (Maybe Country)
+country = (string "Australia"      >> return (Just Australia))
+      <|> (string "Austria"        >> return (Just Austria))
+      <|> (string "Brazil"         >> return (Just Brazil))
+      <|> (string "Canada"         >> return (Just Canada))
+      <|> (string "England"        >> return (Just England))
+      <|> (string "France"         >> return (Just France))
+      <|> (string "Finland"        >> return (Just Finland))
+      <|> (string "Germany"        >> return (Just Germany))
+      <|> (string "Hungary"        >> return (Just Hungary))
+      <|> (string "Israel"         >> return (Just Israel))
+      <|> (string "Italy"          >> return (Just Italy))
+      <|> (string "Korea"          >> return (Just SouthKorea))
+      <|> (string "Latvia"         >> return (Just Latvia))
+      <|> (string "Netherlands"    >> return (Just Netherlands))
+      <|> (string "New Zealand"    >> return (Just NewZealand))
+      <|> (string "Norway"         >> return (Just Norway))
+      <|> (string "Poland"         >> return (Just Poland))
+      <|> (string "Russia"         >> return (Just Russia))
+      <|> (string "Scotland"       >> return (Just Scotland))
+      <|> (string "Singapore"      >> return (Just Singapore))
+      <|> (string "SouthKorea"     >> return (Just SouthKorea))
+      <|> (string "Spain"          >> return (Just Spain))
+      <|> (string "Sweden"         >> return (Just Sweden))
+      <|> (string "Switzerland"    >> return (Just Switzerland))
+      <|> (string "Ukraine"        >> return (Just Ukraine))
+      <|> (string "United Kingdom" >> return (Just UnitedKingdom))
+      <|> (string "UK"             >> return (Just UnitedKingdom))
+      <|> (string "United States"  >> return (Just UnitedStates))
+      <|> return Nothing
 
       -- in case of the United States, we will only see the state...
 
-state :: Parser State
-state = (string "AL" >> return Alabama)
-    <|> (string "AK" >> return Alaska)
-    <|> (string "AZ" >> return Arizona)
-    <|> (string "AR" >> return Arkansas)
-    <|> (string "CA" >> return California)
-    <|> (string "CO" >> return Colorado)
-    <|> (string "CT" >> return Connecticut)
-    <|> (string "DC" >> return DistrictOfColumbia)
-    <|> (string "DE" >> return Delaware)
-    <|> (string "FL" >> return Florida)
-    <|> (string "GA" >> return Georgia)
-    <|> (string "HI" >> return Hawaii)
-    <|> (string "ID" >> return Idaho)
-    <|> (string "IL" >> return Illinois)
-    <|> (string "IN" >> return Indiana)
-    <|> (string "IA" >> return Iowa)
-    <|> (string "KS" >> return Kansas)
-    <|> (string "KY" >> return Kentucky)
-    <|> (string "LA" >> return Louisiana)
-    <|> (string "ME" >> return Maine)
-    <|> (string "MD" >> return Maryland)
-    <|> (string "MA" >> return Massachusetts)
-    <|> (string "MI" >> return Michigan)
-    <|> (string "MN" >> return Minnesota)
-    <|> (string "MS" >> return Mississippi)
-    <|> (string "MO" >> return Montana)
-    <|> (string "NE" >> return Nebraska)
-    <|> (string "NV" >> return Nevada)
-    <|> (string "NH" >> return NewHampshire)
-    <|> (string "NJ" >> return NewJersey)
-    <|> (string "NM" >> return NewMexico)
-    <|> (string "NY" >> return NewYork)
-    <|> (string "NC" >> return NorthCarolina)
-    <|> (string "ND" >> return NorthDakota)
-    <|> (string "OH" >> return Ohio)
-    <|> (string "OK" >> return Oklahoma)
-    <|> (string "OR" >> return Oregon)
-    <|> (string "PA" >> return Pennsylvania)
-    <|> (string "RI" >> return RhodeIsland)
-    <|> (string "SC" >> return SouthCarolina)
-    <|> (string "SD" >> return SouthDakota)
-    <|> (string "TN" >> return Tennessee)
-    <|> (string "TX" >> return Texas)
-    <|> (string "UT" >> return Utah)
-    <|> (string "VT" >> return Vermont)
-    <|> (string "VA" >> return Virginia)
-    <|> (string "WA" >> return Washington)
-    <|> (string "WV" >> return WestVirginia)
-    <|> (string "WI" >> return Wisconsin)
-    <|> (string "WY" >> return Wyoming)
+state :: Parser (Maybe State)
+state = (string "AL" >> return (Just Alabama))
+    <|> (string "AK" >> return (Just Alaska))
+    <|> (string "AZ" >> return (Just Arizona))
+    <|> (string "AR" >> return (Just Arkansas))
+    <|> (string "CA" >> return (Just California))
+    <|> (string "CO" >> return (Just Colorado))
+    <|> (string "CT" >> return (Just Connecticut))
+    <|> (string "DC" >> return (Just DistrictOfColumbia))
+    <|> (string "DE" >> return (Just Delaware))
+    <|> (string "FL" >> return (Just Florida))
+    <|> (string "GA" >> return (Just Georgia))
+    <|> (string "HI" >> return (Just Hawaii))
+    <|> (string "ID" >> return (Just Idaho))
+    <|> (string "IL" >> return (Just Illinois))
+    <|> (string "IN" >> return (Just Indiana))
+    <|> (string "IA" >> return (Just Iowa))
+    <|> (string "KS" >> return (Just Kansas))
+    <|> (string "KY" >> return (Just Kentucky))
+    <|> (string "LA" >> return (Just Louisiana))
+    <|> (string "ME" >> return (Just Maine))
+    <|> (string "MD" >> return (Just Maryland))
+    <|> (string "MA" >> return (Just Massachusetts))
+    <|> (string "MI" >> return (Just Michigan))
+    <|> (string "MN" >> return (Just Minnesota))
+    <|> (string "MS" >> return (Just Mississippi))
+    <|> (string "MO" >> return (Just Montana))
+    <|> (string "NE" >> return (Just Nebraska))
+    <|> (string "NV" >> return (Just Nevada))
+    <|> (string "NH" >> return (Just NewHampshire))
+    <|> (string "NJ" >> return (Just NewJersey))
+    <|> (string "NM" >> return (Just NewMexico))
+    <|> (string "NY" >> return (Just NewYork))
+    <|> (string "NC" >> return (Just NorthCarolina))
+    <|> (string "ND" >> return (Just NorthDakota))
+    <|> (string "OH" >> return (Just Ohio))
+    <|> (string "OK" >> return (Just Oklahoma))
+    <|> (string "OR" >> return (Just Oregon))
+    <|> (string "PA" >> return (Just Pennsylvania))
+    <|> (string "RI" >> return (Just RhodeIsland))
+    <|> (string "SC" >> return (Just SouthCarolina))
+    <|> (string "SD" >> return (Just SouthDakota))
+    <|> (string "TN" >> return (Just Tennessee))
+    <|> (string "TX" >> return (Just Texas))
+    <|> (string "UT" >> return (Just Utah))
+    <|> (string "VT" >> return (Just Vermont))
+    <|> (string "VA" >> return (Just Virginia))
+    <|> (string "WA" >> return (Just Washington))
+    <|> (string "WV" >> return (Just WestVirginia))
+    <|> (string "WI" >> return (Just Wisconsin))
+    <|> (string "WY" >> return (Just Wyoming))
 
     -- states in Canada
-    <|> (string "AB" >> return Alberta)
-    <|> (string "BC" >> return BritishColumbia)
-    <|> (string "NB" >> return NewBrunswick)
-    <|> (string "NL" >> return Newfoundland)
-    <|> (string "NS" >> return NovaScotia)
-    <|> (string "MB" >> return Manitoba)
-    <|> (string "ON" >> return Ontario)
-    <|> (string "PE" >> return PrinceEdwardIsland)
-    <|> (string "QC" >> return Quebec)
-    <|> (string "SK" >> return Saskatchewan)
+    <|> (string "AB" >> return (Just Alberta))
+    <|> (string "BC" >> return (Just BritishColumbia))
+    <|> (string "NB" >> return (Just NewBrunswick))
+    <|> (string "NL" >> return (Just Newfoundland))
+    <|> (string "NS" >> return (Just NovaScotia))
+    <|> (string "MB" >> return (Just Manitoba))
+    <|> (string "ON" >> return (Just Ontario))
+    <|> (string "PE" >> return (Just PrinceEdwardIsland))
+    <|> (string "QC" >> return (Just Quebec))
+    <|> (string "SK" >> return (Just Saskatchewan))
+
+    <|> return Nothing
+
+
+city :: Parser (Maybe City)
+city = do parsedCity <- takeWhile1 (/= ',')
+          return . Just . City $ parsedCity
