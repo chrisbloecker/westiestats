@@ -22,7 +22,7 @@ url n = "http://wsdc-points.us-west-2.elasticbeanstalk.com/lookup/find?num=" ++ 
 
 loadDancer :: WscId -> IO (Either String E.Person)
 loadDancer (WscId wscid) = do
-  putStrLn $ "Loading " ++ spack wscid
+  putStrLn $ "Loading " ++ T.pack (show wscid)
   body <- getResponseBody =<< simpleHTTP (postRequest $ url (fromIntegral wscid))
   return . eitherDecode' . encodeUtf8 . fromStrict . (T.replace ",\"placements\":[]" "" :: Text -> Text) . T.pack $ body
 

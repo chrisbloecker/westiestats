@@ -4,19 +4,24 @@
       $with Competitor _ wscid firstName lastName results <- competitor
         <h2>#{wscid} - #{firstName} #{lastName}
         <hr>
-        <div .row>
-          <div id="worldmap" .col-md-6 .col-lg-6>
-          <div id="usamap"   .col-md-6 .col-lg-6>
+        <div .row style="align: center;">
+          $if null states
+            <div               .hidden-xs .hidden-sm .col-md-3 .col-lg-3>
+            <div id="worldmap" .col-xs-12 .col-sm-12 .col-md-6 .col-lg-6>
+            <div               .hidden-xs .hidden-sm .col-md-3 .col-lg-3>
+          $else
+            <div id="worldmap" .col-xs-12 .col-sm-12 .col-md-6  .col-lg-6>
+            <div id="usamap"   .col-xs-12 .col-sm-12 .col-md-6  .col-lg-6>
         $forall Result division points competitions <- results
           <h4>#{division} - #{points} Points
           <table .table .table-striped .table-hover>
             <thead>
-              <th .col-md-2 .col-lg-2>_{MsgEventName}
-              <th .col-md-1 .col-lg-1>_{MsgEventLocation}
-              <th .col-md-1 .col-lg-1>_{MsgEventDate}
-              <th .col-md-1 .col-lg-1>_{MsgCompetitorRole}
-              <th .col-md-1 .col-lg-1>_{MsgCompetitorResult}
-              <th .col-md-1 .col-lg-1>_{MsgCompetitorPoints}
+              <th>_{MsgEventName}
+              <th>_{MsgEventLocation}
+              <th>_{MsgEventDate}
+              <th>_{MsgCompetitorRole}
+              <th>_{MsgCompetitorResult}
+              <th>_{MsgCompetitorPoints}
             <tbody>
             $forall Competition (Event eventId name location month year) role placement points <- competitions
               <tr>

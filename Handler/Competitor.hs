@@ -20,7 +20,7 @@ getCompetitorR wscid = do
   mcompetitor <- acidQuery (GetCompetitor wscid)
 
   let locations = map (eventLocation . competitionEvent) . concatMap resultCompetitions . competitorResults <$> mcompetitor
-      countries = nub . mapMaybe locationCountry <$> locations
-      states    = nub . mapMaybe locationState   <$> locations
+      countries = fromMaybe [] $ nub . mapMaybe locationCountry                                                   <$> locations
+      states    = fromMaybe [] $ nub . mapMaybe locationState   . filter (locationCountry `is` Just UnitedStates) <$> locations
 
   defaultLayout $(widgetFile "competitor")

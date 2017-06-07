@@ -10,6 +10,7 @@ $(function ()
     {
       $('#search-input').val(suggestion.value);
       $('#search-hidden').val(suggestion.data);
+      $('#search-submit').click();
     }
   });
 });
