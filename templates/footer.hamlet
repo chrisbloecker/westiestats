@@ -1,8 +1,5 @@
 <footer style="min-height:25px">
   <div .text-center>
-    <span .label .label-default>
-      Snapshot from #{snapshotDate}
-    \ #
     <span .label .label-success>
       #{appCopyright $ appSettings master}
     \ #
