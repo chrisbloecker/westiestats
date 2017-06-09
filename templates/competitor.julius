@@ -5,6 +5,7 @@ $(function ()
 
   AmCharts.makeChart( "worldmap",
   { "type"          : "map"
+  , "projection"    : "miller"
   , "theme"         : "light"
   , "dataProvider"  : { "map"   : "worldLow"
                       , "areas" : countries
