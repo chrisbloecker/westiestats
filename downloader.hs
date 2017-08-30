@@ -12,6 +12,7 @@ import           Data.Either                   (rights)
 import           Data.Time.Clock               (getCurrentTime, utctDay)
 import           Model                         (WscId (..))
 import           Model.External                (Snapshot (..))
+import           Network.HTTP.Conduit          (newManager, tlsManagerSettings)
 import           Options.Applicative
 --------------------------------------------------------------------------------
 import qualified Data.ByteString.Lazy as BS    (writeFile)
@@ -44,7 +45,8 @@ run Options{..} = do
   let snapshotFromWscId = from
       snapshotToWscId   = to
   snapshotDate    <- utctDay <$> getCurrentTime
-  snapshotPersons <- rights <$> parallel [loadDancer (WscId wscid) | wscid <- [from .. to]]
+  manager         <- newManager tlsManagerSettings
+  snapshotPersons <- rights <$> parallel [loadDancer manager (WscId wscid) | wscid <- [from .. to]]
   BS.writeFile out (encode Snapshot{..})
 
 main :: IO ()

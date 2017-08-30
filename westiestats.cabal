@@ -119,11 +119,12 @@ executable          downloader
     hs-source-dirs:     .
     build-depends:      aeson
                       , base
+                      , bytestring
                       , classy-prelude
+                      , http-conduit
+                      , optparse-applicative
                       , parallel-io
                       , time
-                      , optparse-applicative
-                      , bytestring
                       , westiestats
 
     ghc-options:        -O2 -threaded -rtsopts -with-rtsopts=-N

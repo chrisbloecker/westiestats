@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+--------------------------------------------------------------------------------
 module Competitor
   ( loadDancer
   , loadCompetitor
@@ -7,28 +9,29 @@ module Competitor
 --------------------------------------------------------------------------------
 import           CBPrelude
 import           ClassyPrelude
-import           Data.Text             as T (pack, replace)
 import           Import.DeriveJSON
 import           Model
-import           Network.HTTP               (simpleHTTP, postRequest, getResponseBody)
+import           Network.HTTP.Conduit        (Manager, Request (..), httpLbs, parseRequest, responseBody)
 --------------------------------------------------------------------------------
-import qualified Data.Set              as S (singleton)
-import qualified Data.Map              as M (singleton)
+import qualified Data.Map              as M  (singleton)
+import qualified Data.Set              as S  (singleton)
+import qualified Data.Text             as T  (pack)
 import qualified Model.External        as E
+import qualified Data.ByteString.Char8 as BS (pack)
 --------------------------------------------------------------------------------
 
-url :: Int -> String
-url n = "http://wsdc-points.us-west-2.elasticbeanstalk.com/lookup/find?num=" ++ show n
-
-loadDancer :: WscId -> IO (Either String E.Person)
-loadDancer (WscId wscid) = do
+loadDancer :: Manager -> WscId -> IO (Either String E.Person)
+loadDancer manager (WscId wscid) = do
   putStrLn $ "Loading " ++ T.pack (show wscid)
-  body <- getResponseBody =<< simpleHTTP (postRequest $ url (fromIntegral wscid))
-  return . eitherDecode' . encodeUtf8 . fromStrict . (T.replace ",\"placements\":[]" "" :: Text -> Text) . T.pack $ body
+  req      <- parseRequest "https://points.worldsdc.com/lookup/find"
+  response <- flip httpLbs manager $ req { method      = "POST"
+                                         , queryString = "num=" ++ (BS.pack . show $ wscid)
+                                         }
+  return . eitherDecode' . responseBody $ response
 
-loadCompetitor :: WscId -> IO (Either String (Competitor, [EventDetails]))
-loadCompetitor wscid = do
-  mp <- loadDancer wscid
+loadCompetitor :: Manager -> WscId -> IO (Either String (Competitor, [EventDetails]))
+loadCompetitor manager wscid = do
+  mp <- loadDancer manager wscid
   return $ fmap ((id &&& extractEventDetails) . fromPerson) mp
 
 extractEventDetails :: Competitor -> [EventDetails]
